@@ -219,7 +219,7 @@ textarea.copy-fallback{width:100%;min-height:160px;font:13px/1.6 var(--ff-body);
 
 /* ---------- 回答方式の選択・場面選択の設問 ---------- */
 fieldset.modes{border:0;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-fieldset.modes legend{font-weight:700;font-size:13px;padding:0;margin-bottom:6px;float:left;width:100%}
+fieldset.modes legend{font-weight:700;font-size:13px;padding:0;float:left;width:100%;grid-column:1/-1}
 .mode{position:relative;border:1.5px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
 .mode input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
 .mode .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
