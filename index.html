@@ -1,0 +1,1366 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="5段階で答える79問、または仕事の場面で答える64問から、仕事版のMBTIタイプ・モチベーションの源泉トップ3・仕事観がわかる無料の診断ツール。">
+<meta name="theme-color" content="#1f3c78">
+<meta property="og:type" content="website">
+<meta property="og:title" content="MBTI仕事タイプ診断">
+<meta property="og:description" content="5段階で答える79問、または仕事の場面で答える64問から、仕事版のMBTIタイプ・モチベーションの源泉トップ3・仕事観がわかる無料の診断ツール。">
+<meta property="og:image" content="https://koushirou3355.github.io/mbti-work/og.png">
+<meta property="og:url" content="https://koushirou3355.github.io/mbti-work/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="仕事タイプ診断">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.5 system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>MBTI仕事タイプ診断</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: 診断票（A4帳票）を画面に置いた構成。紺の帯見出し＋白い用紙、赤は「上位・強調」だけに使う */
+:root{
+  --bg:#eef0f4; --paper:#ffffff; --ink:#1a2132; --muted:#5a6377; --line:#d8dce5; --line-2:#eceef3;
+  --navy:#1f3c78; --navy-soft:#e5ebf6; --band:#1f3c78; --on-band:#ffffff;
+  --red:#c2392e; --red-soft:#fbeae7; --gold:#cf9318;
+  --ff-body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --ff-num:"Barlow Condensed","Arial Narrow",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#10141c; --paper:#181e29; --ink:#e6e9f0; --muted:#9aa3b6; --line:#2d3546; --line-2:#222a38;
+  --navy:#86a6ea; --navy-soft:#223150; --band:#284a8c; --on-band:#ffffff;
+  --red:#f07c6e; --red-soft:#3b2421; --gold:#e6b450; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#10141c; --paper:#181e29; --ink:#e6e9f0; --muted:#9aa3b6; --line:#2d3546; --line-2:#222a38;
+  --navy:#86a6ea; --navy-soft:#223150; --band:#284a8c; --on-band:#ffffff;
+  --red:#f07c6e; --red-soft:#3b2421; --gold:#e6b450; color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--ff-body);font-size:15px;line-height:1.75;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.35}
+p{margin:0}
+button{font-family:inherit;font-size:15px;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.num{font-family:var(--ff-num);font-variant-numeric:tabular-nums}
+
+/* ---------- 共通の用紙・ボタン ---------- */
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:4px}
+.btn{border:1.5px solid var(--navy);background:var(--paper);color:var(--navy);padding:10px 20px;border-radius:999px;font-weight:700}
+.btn.primary{background:var(--band);border-color:var(--band);color:var(--on-band)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{border-color:var(--line);color:var(--muted)}
+
+/* ---------- イントロ ---------- */
+.intro{padding:36px clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:24px}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--muted);font-weight:700}
+.intro h1{font-size:clamp(28px,5vw,40px);font-weight:900;letter-spacing:.02em}
+.intro h1 em{font-style:normal;color:var(--navy)}
+.intro .lead{color:var(--muted);max-width:60ch}
+.learn{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.learn > div{border-top:3px solid var(--band);padding:12px 4px 0;display:flex;flex-direction:column;gap:4px;min-width:0}
+.learn b{font-size:16px}
+.learn small{color:var(--muted);font-size:13px;line-height:1.6}
+.learn .num{font-size:26px;color:var(--navy);line-height:1}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px 20px;color:var(--muted);font-size:13px}
+.name-field{display:flex;flex-direction:column;gap:6px;max-width:360px}
+.name-field label{font-weight:700;font-size:13px}
+.name-field input{font:inherit;padding:10px 12px;border:1.5px solid var(--line);border-radius:4px;background:var(--paper);color:var(--ink)}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.note{font-size:12px;color:var(--muted)}
+
+/* ---------- 設問 ---------- */
+.quiz-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;display:flex;flex-direction:column;gap:8px}
+.quiz-head .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.part-name{font-weight:900;font-size:18px}
+.part-name small{font-weight:500;color:var(--muted);font-size:13px;margin-left:8px}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar > i{display:block;height:100%;background:var(--band);width:0;transition:width .3s}
+.part-hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.qlist{display:flex;flex-direction:column}
+fieldset.q{border:0;border-bottom:1px solid var(--line-2);margin:0;padding:22px clamp(16px,4vw,32px);display:flex;flex-direction:column;gap:14px;transition:opacity .2s}
+fieldset.q:last-child{border-bottom:0}
+fieldset.q.answered{opacity:.62}
+fieldset.q legend{float:left;width:100%;padding:0;font-weight:700;font-size:16px;line-height:1.6}
+fieldset.q legend + *{clear:both}
+.qn{font-family:var(--ff-num);color:var(--navy);font-size:15px;margin-right:10px;font-weight:700}
+.lk{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.lk .end{font-size:12px;color:var(--muted);font-weight:700}
+.lk .end.l{text-align:right}
+.dots{display:flex;align-items:center;gap:clamp(8px,2.4vw,18px)}
+.dot{position:relative;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.dot input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.dot span{display:block;border-radius:50%;border:2px solid var(--muted);transition:background .15s,transform .15s}
+.dot.s2 span{width:42px;height:42px}.dot.s1 span{width:34px;height:34px}.dot.s0 span{width:26px;height:26px}
+.dot.neg span{border-color:var(--red)} .dot.pos span{border-color:var(--navy)}
+.dot.neg input:checked + span{background:var(--red)} .dot.pos input:checked + span{background:var(--navy)}
+.dot.mid input:checked + span{background:var(--muted)}
+.dot input:focus-visible + span{outline:3px solid var(--gold);outline-offset:2px}
+.dot:hover span{transform:scale(1.06)}
+.ab{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center}
+.ab .st{font-size:14px;line-height:1.6;padding:10px 12px;border-radius:4px;background:var(--line-2);min-width:0}
+.ab .st.a{text-align:right}
+.ab .st b{display:block;font-size:11px;letter-spacing:.1em;color:var(--muted)}
+.picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.pick{position:relative;border:1.5px solid var(--line);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;cursor:pointer}
+.pick input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.pick:has(input:checked){border-color:var(--red);background:var(--red-soft)}
+.pick:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+.pick small{color:var(--muted);font-size:12px}
+.pick b{font-size:15px}
+.quiz-nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.quiz-nav .left{font-size:13px;color:var(--muted)}
+
+/* ---------- レポート ---------- */
+.sheet{overflow:hidden}
+.sheet-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;padding:22px clamp(16px,4vw,32px);border-bottom:1px solid var(--line)}
+.sheet-head h1{font-size:20px;font-weight:900}
+.sheet-head dl{display:grid;grid-template-columns:auto 1fr;gap:2px 14px;margin:0;font-size:14px}
+.sheet-head dt{color:var(--muted);font-size:12px;font-weight:700;align-self:center}
+.sheet-head dd{margin:0;font-weight:700}
+.sample-badge{display:inline-block;background:var(--red-soft);color:var(--red);font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;margin-top:6px}
+.band{display:flex;align-items:stretch;background:var(--band);color:var(--on-band)}
+.band .no{font-family:var(--ff-num);font-size:34px;font-weight:700;padding:4px 16px;display:flex;align-items:center;background:rgba(0,0,0,.18)}
+.band .tx{padding:10px 16px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 20px;min-width:0}
+.band h2{font-size:18px;font-weight:900}
+.band p{font-size:12px;opacity:.88;line-height:1.5}
+.sec{padding:24px clamp(16px,4vw,32px) 30px;display:flex;flex-direction:column;gap:22px}
+.sub-h{font-size:13px;font-weight:900;color:var(--navy);letter-spacing:.06em;display:flex;align-items:center;gap:8px}
+.sub-h::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.type-hero{display:grid;grid-template-columns:auto 1fr;gap:12px 28px;align-items:center}
+.code{font-family:var(--ff-num);font-weight:700;font-size:clamp(64px,13vw,104px);line-height:.9;letter-spacing:.02em;color:var(--navy)}
+.code span{font-size:.45em;color:var(--muted);margin-left:2px}
+.tname{font-size:clamp(22px,4vw,28px);font-weight:900}
+.catch{color:var(--muted);margin-top:2px}
+.letters{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:10px 0 0}
+.letters li{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+.letters li b{font-family:var(--ff-num);font-size:14px;color:var(--navy);margin-right:4px}
+.letters li.edge{border-style:dashed}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid var(--line)}
+.cols3 > div{padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.cols3 > div + div{border-left:1px solid var(--line)}
+.cols3 h3{font-size:13px;font-weight:900;text-align:center;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.cols3 p{font-size:14px}
+
+.scales{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
+.scale{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr);gap:10px 14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.scale .ttl{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:12px;color:var(--muted);font-weight:700}
+.scale .ttl .num{font-size:15px;color:var(--ink)}
+.pole{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pole.r{text-align:right}
+.pole .nm{font-size:17px;font-weight:900;color:var(--muted)}
+.pole .nm .num{font-size:20px;margin-right:4px}
+.pole.on .nm{color:var(--navy)}
+.pole small{font-size:12px;color:var(--muted);line-height:1.5}
+.pole ul{margin:4px 0 0;padding:0;list-style:none;font-size:12.5px;line-height:1.65;color:var(--muted)}
+.pole.on ul{color:var(--ink)}
+.pole ul li::before{content:"・"}
+.track{display:grid;grid-template-columns:repeat(5,1fr);align-self:center;text-align:center;gap:2px}
+.track .lab{font-size:11px;color:var(--muted)}
+.track .cell{height:30px;display:flex;align-items:center;justify-content:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}
+.track .cell::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--line)}
+.track .cell.on::before{width:22px;height:22px;background:var(--navy)}
+
+.boxes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.box{border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.box h3{font-size:14px;font-weight:900;color:var(--navy)}
+.box ul{margin:0;padding-left:1.2em;font-size:14px}
+.box.tone{background:var(--navy-soft);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px 12px}
+
+.mot{display:grid;grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr);gap:22px;align-items:start}
+.radar{width:100%;max-width:420px;height:auto;justify-self:center}
+.radar text{font-family:var(--ff-body)}
+.top3{display:flex;flex-direction:column;gap:12px}
+.rcard{display:grid;grid-template-columns:76px 1fr;gap:12px;border:1px solid var(--line);border-radius:4px;padding:12px;min-width:0}
+.rcard .rk{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-right:1px dashed var(--line);padding-right:10px}
+.rcard .rk .num{font-size:30px;line-height:1;color:var(--red)}
+.rcard .rk small{font-size:11px;color:var(--muted)}
+.rcard .rk b{font-size:18px;font-weight:900}
+.rcard .bd{display:flex;flex-direction:column;gap:6px;min-width:0;font-size:13.5px}
+.rcard .tags{font-size:12px;color:var(--muted)}
+.rcard .tip{background:var(--red-soft);border-radius:4px;padding:8px 10px;font-size:13px;display:flex;flex-direction:column;gap:4px}
+
+.vals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.vcard{border:1px solid var(--line);border-radius:4px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.vcard h3{font-size:16px;font-weight:900;text-align:center}
+.vcard .q{font-size:12px;color:var(--muted);text-align:center;margin-top:-6px}
+.vcard p{font-size:13.5px}
+.donut-row{display:flex;align-items:center;justify-content:center;gap:14px}
+.donut-row .lg{display:flex;flex-direction:column;gap:6px;font-size:13px}
+.donut-row .lg span{display:flex;align-items:center;gap:6px}
+.donut-row .lg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.split{display:flex;flex-direction:column;gap:4px}
+.split .lbls{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700}
+.split .lbls .on{color:var(--navy)}
+.split .sb{display:grid;grid-template-columns:repeat(10,1fr);gap:2px}
+.split .sb i{height:14px;background:var(--line)}
+.split .sb i.a{background:var(--navy)}
+.split .sb i.b{background:var(--gold)}
+.split .nums{display:flex;justify-content:space-between;font-size:16px}
+
+.foot-note{font-size:12px;color:var(--muted);padding:16px clamp(16px,4vw,32px);border-top:1px solid var(--line)}
+.report-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.toast{font-size:13px;color:var(--navy);text-align:center;min-height:1.5em}
+textarea.copy-fallback{width:100%;min-height:160px;font:13px/1.6 var(--ff-body);background:var(--paper);color:var(--ink);border:1px solid var(--line);padding:10px}
+
+/* ---------- 回答方式の選択・場面選択の設問 ---------- */
+fieldset.modes{border:0;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+fieldset.modes legend{font-weight:700;font-size:13px;padding:0;margin-bottom:6px;float:left;width:100%}
+.mode{position:relative;border:1.5px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
+.mode input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.mode .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.mode b{font-size:16px}
+.mode .num{font-size:18px;color:var(--muted)}
+.mode small{font-size:12.5px;color:var(--muted);line-height:1.6}
+.mode:has(input:checked){border-color:var(--navy);background:var(--navy-soft)}
+.mode:has(input:checked) .num{color:var(--navy)}
+.mode:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{position:relative;border:1.5px solid var(--line);border-radius:6px;padding:10px 12px 10px 42px;cursor:pointer;font-size:14.5px;line-height:1.6}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt::before{content:"";position:absolute;left:13px;top:13px;width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);box-sizing:border-box}
+.opt:hover{border-color:var(--navy)}
+.opt:has(input:checked){border-color:var(--navy);background:var(--navy-soft)}
+.opt:has(input:checked)::before{border-color:var(--navy);background:var(--navy);box-shadow:inset 0 0 0 3px var(--navy-soft)}
+.opt:has(input:focus-visible){outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- 送信・管理者一覧 ---------- */
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);max-width:68ch;cursor:pointer}
+.consent input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--navy)}
+.send-box{padding:16px clamp(16px,4vw,32px);display:flex;flex-direction:column;gap:10px;font-size:14px}
+.send-box .actions{justify-content:flex-start}
+.adm-bars{display:flex;flex-direction:column;gap:6px}
+.adm-bars div{display:grid;grid-template-columns:5em 1fr 2.5em;gap:10px;align-items:center;font-size:13px}
+.adm-bars i{display:block;height:12px;background:var(--navy);border-radius:2px;min-width:2px}
+.adm-bars .num{text-align:right;font-size:15px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line)}
+.adm-tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+.adm-tbl th,.adm-tbl td{padding:8px 10px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.adm-tbl th{background:var(--navy-soft);font-size:12px;white-space:nowrap}
+.adm-tbl th small{font-weight:500;color:var(--muted)}
+.adm-tbl td.code{font-family:var(--ff-num);font-size:16px;font-weight:700;color:var(--navy);white-space:nowrap}
+.adm-tbl .del{border:0;background:none;color:var(--red);font-size:12px;padding:0}
+
+@media (max-width:720px){
+  fieldset.modes{grid-template-columns:1fr}
+  .quiz-head{padding-block:8px;gap:6px}
+  .part-name{font-size:16px}
+  .part-name small{display:none}
+  .learn{grid-template-columns:1fr}
+  .cols3{grid-template-columns:1fr}
+  .cols3 > div + div{border-left:0;border-top:1px solid var(--line)}
+  .boxes,.vals,.mot{grid-template-columns:1fr}
+  .type-hero{grid-template-columns:1fr}
+  .scale{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .scale .track{grid-column:1/-1;grid-row:2}
+  .ab{grid-template-columns:1fr}
+  .ab .st.a{text-align:left}
+  .ab .dots{justify-content:center}
+  .lk{grid-template-columns:1fr 1fr;row-gap:6px}
+  .lk .dots{grid-column:1/-1;grid-row:1;justify-content:center}
+  .lk .end.l{text-align:left}
+  .lk .end.r{text-align:right}
+}
+@media print{
+  :root{--bg:#fff;--paper:#fff;--ink:#1a2132;--muted:#5a6377;--line:#d8dce5;--line-2:#eceef3;--navy:#1f3c78;--navy-soft:#e5ebf6;--band:#1f3c78;--red:#c2392e;--red-soft:#fbeae7;--gold:#cf9318;color-scheme:light}
+  @page{size:A4;margin:12mm}
+  body{padding:0;font-size:12px}
+  .report-actions,.toast,#copy-area,.send-box{display:none!important}
+  .paper{border:0}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .band,.scale,.box,.rcard,.vcard{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+
+  <!-- ===== イントロ ===== -->
+  <section id="intro" class="paper intro" aria-labelledby="intro-h">
+    <div class="eyebrow">WORK STYLE &amp; MOTIVATION PROFILE</div>
+    <h1 id="intro-h"><em>MBTI</em>仕事タイプ診断<br>＋モチベーション分析</h1>
+    <p class="lead">仕事や職場での行動にあらわれやすい性格タイプと、あなたのやる気の源泉を分析します。自分の特徴を理解して生かすため、また上司やチームとの関わり方を考えるために使ってください。</p>
+    <div class="learn">
+      <div><span class="num">16×2</span><b>仕事タイプ</b><small>MBTIの4軸＋プレッシャーへの反応で、仕事面の特徴・強み・注意点を判定</small></div>
+      <div><span class="num">10</span><b>モチベーション・リソース</b><small>承認・挑戦・自律など10項目から、やる気の源泉トップ3を特定</small></div>
+      <div><span class="num">6</span><b>仕事観・すすめ方</b><small>働く目的、成長観、課題遂行と協働のスタイルを10点配分で表示</small></div>
+    </div>
+    <fieldset class="modes">
+      <legend>回答のしかたを選んでください</legend>
+      <label class="mode"><input type="radio" name="mode" value="lk" checked><span class="mh"><b>感じ方で答える</b><span class="num" id="mode-n-lk"></span></span><small>「会議では話しながら考えをまとめる」などの文が、どのくらい当てはまるかを5段階で選びます。</small></label>
+      <label class="mode"><input type="radio" name="mode" value="sj"><span class="mh"><b>場面で答える</b><span class="num" id="mode-n-sj"></span></span><small>仕事の具体的な場面ごとに、自分が実際にとりそうな行動を4つの選択肢から1つ選びます。「どのくらい」の感じ方による差が出にくい方式です。</small></label>
+    </fieldset>
+    <div class="meta-row"><span id="meta-q"></span><span>回答はこのブラウザにだけ保存されます</span></div>
+    <div class="name-field">
+      <label for="name">氏名（レポートに表示）</label>
+      <input id="name" type="text" autocomplete="name" placeholder="例：山田 太郎">
+    </div>
+    <label class="consent" id="consent-row" hidden><input type="checkbox" id="consent"><span>診断が終わったら、結果の要約（氏名・タイプ・指標の比率・モチベーション得点・仕事観の配分）を、このページの管理者に送ることに同意します。各設問への回答そのものは送りません。あとから取り消せます。</span></label>
+    <div class="actions">
+      <button class="btn primary" id="start" type="button">診断をはじめる</button>
+      <button class="btn" id="resume" type="button" hidden>続きから再開</button>
+      <button class="btn ghost" id="sample" type="button">サンプル結果を見る</button>
+      <button class="btn ghost" id="admin-open" type="button" hidden>結果一覧（管理者）</button>
+    </div>
+    <p class="note">あまり考え込まず、普段の仕事の場面を思い浮かべて直感で答えてください。本診断はMBTIの考え方を参考にした独自の簡易診断で、公式のMBTI®検査ではありません。</p>
+  </section>
+
+  <!-- ===== 設問 ===== -->
+  <section id="quiz" hidden aria-live="polite">
+    <div class="quiz-head">
+      <div class="row"><div class="part-name" id="part-name"></div><div class="num" id="prog-num"></div></div>
+      <div class="bar"><i id="prog"></i></div>
+    </div>
+    <div class="part-hint" id="part-hint"></div>
+    <div class="paper qlist" id="qlist"></div>
+    <div class="quiz-nav" style="margin-top:16px">
+      <button class="btn ghost" id="back" type="button">戻る</button>
+      <span class="left" id="remain"></span>
+      <button class="btn primary" id="next" type="button">次へ</button>
+    </div>
+  </section>
+
+  <!-- ===== レポート ===== -->
+  <section id="report" hidden>
+    <div class="paper sheet" id="sheet"></div>
+    <div class="paper send-box" id="send-box" hidden>
+      <p id="send-msg" role="status"></p>
+      <div class="actions"><button class="btn primary" id="send" type="button">結果を管理者に送る</button><button class="btn ghost" id="unsend" type="button" hidden>送信を取り消す</button></div>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <div class="report-actions">
+      <button class="btn primary" id="copy" type="button">結果をテキストでコピー</button>
+      <button class="btn" id="print" type="button">印刷・PDFで保存</button>
+      <button class="btn" id="edit" type="button">回答を見直す</button>
+      <button class="btn ghost" id="restart" type="button">最初からやり直す</button>
+    </div>
+    <div id="copy-area"></div>
+  </section>
+
+  <!-- ===== 管理者：結果一覧 ===== -->
+  <section id="admin" hidden>
+    <div class="paper sheet">
+      <div class="sheet-head"><div><div class="eyebrow">RESULTS</div><h1>診断結果の一覧</h1></div><dl><dt>回答者</dt><dd class="num" id="adm-count">0</dd></dl></div>
+      <div class="sec">
+        <p class="note">結果を送ることに同意した人だけが表示されます。同じ人が受け直した場合は最新の結果に置き換わります。人事評価や配置の決定に、この結果だけを使わないでください。</p>
+        <p class="note" id="adm-status" role="status"></p>
+        <div class="sub-h">タイプの分布</div>
+        <div class="chips" id="adm-types"></div>
+        <div class="sub-h">モチベーションの上位3つに入った回数</div>
+        <div class="adm-bars" id="adm-mot"></div>
+        <div class="sub-h">一人ずつの結果</div>
+        <div class="tbl-wrap"><table class="adm-tbl"><thead><tr><th>氏名</th><th>実施日</th><th>タイプ</th><th>モチベーション上位3</th><th>働く目的<br><small>成長:貢献</small></th><th>成長観<br><small>生かす:変える</small></th><th></th></tr></thead><tbody id="adm-rows"></tbody></table></div>
+      </div>
+    </div>
+    <div class="toast" id="adm-toast" role="status"></div>
+    <div class="report-actions">
+      <button class="btn primary" id="adm-copy" type="button">表をコピー（Excel・スプレッドシート用）</button>
+      <button class="btn ghost" id="adm-back" type="button">トップへ戻る</button>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ====================== 指標の定義 ====================== */
+const AXES = [
+  {k:'EI', a:'E', b:'I', an:'外向', bn:'内向', title:'エネルギーの向き',
+   al:'人と関わりながら動く', bl:'内側でじっくり考える',
+   ab:['人と話しながら考えを深める','交流範囲が広く社交的','行動しながら学ぶ'],
+   bb:['一人で考えを整理してから話す','少人数で深く関わる','集中して物事に取り組む']},
+  {k:'SN', a:'S', b:'N', an:'感覚', bn:'直観', title:'情報の捉え方',
+   al:'事実と経験を重視する', bl:'可能性と全体像を重視する',
+   ab:['事実や実績を重視する','具体的・現実的に考える','目の前の業務を確実に進める'],
+   bb:['全体像や将来を思い描く','アイデアや可能性を重視する','背景や意味に関心が向く']},
+  {k:'TF', a:'T', b:'F', an:'思考', bn:'感情', title:'判断の基準',
+   al:'論理とデータで判断する', bl:'人の気持ちを軸に判断する',
+   ab:['論理やデータで判断する','公平さ・一貫性を重視する','率直に意見を伝える'],
+   bb:['人の気持ちや関係性を重視する','納得感や共感を大切にする','相手を気遣って言葉を選ぶ']},
+  {k:'JP', a:'J', b:'P', an:'計画', bn:'柔軟', title:'仕事の進め方',
+   al:'段取りを決めて進める', bl:'状況に合わせて進める',
+   ab:['計画を立ててから着手する','締め切りより早めに仕上げる','物事をはっきり決めたい'],
+   bb:['状況に応じて柔軟に動く','複数の仕事を並行できる','選択肢を残しておきたい']},
+  {k:'AT', a:'A', b:'T', an:'安定', bn:'慎重', title:'プレッシャーへの反応',
+   al:'動じずに切り替える', bl:'慎重に備える',
+   ab:['失敗を引きずらず切り替えが早い','自分の判断に自信をもつ','プレッシャーに動じにくい'],
+   bb:['周囲の評価や細部によく気づく','準備を重ねてリスクに備える','向上心が強く自分に厳しい']},
+];
+
+/* p:'a' は左側（E/S/T/J/A）寄りの設問 */
+const QA = {
+  EI:[['a','会議やブレストでは、話しながら考えをまとめるほうだ'],['b','発言する前に、頭の中で考えを整理しておきたい'],
+      ['a','初対面の取引先とも、すぐに打ち解けられる'],['b','集中できる一人の時間がないと疲れてしまう'],
+      ['a','一人で黙々と作業する時間が長いと物足りなくなる'],['b','大人数より、少人数で深く話すほうが得意だ'],
+      ['a','社内外のイベントや懇親会には積極的に参加する'],['b','口頭よりも、チャットやメールでのやり取りのほうが楽だ']],
+  SN:[['a','前例や実績のあるやり方を参考にしたい'],['b','新しいアイデアや企画を考えるのが楽しい'],
+      ['a','指示は具体的な手順まで示してほしい'],['b','細部よりも、全体像や将来の方向性が気になる'],
+      ['a','数字や事実を根拠に話すのが好きだ'],['b','「なぜそうなるのか」という背景や仕組みに興味がある'],
+      ['a','目の前の業務を確実に仕上げることを優先する'],['b','業界のトレンドや新しいツールには、すぐに飛びつくほうだ']],
+  TF:[['a','意思決定は、感情より論理やデータで行うべきだ'],['b','判断するときは、チームの雰囲気や人間関係も大事にする'],
+      ['a','相手のためになるなら、率直に問題点を指摘する'],['b','相手がどう感じるかを考えて言葉を選ぶ'],
+      ['a','公平さのため、ルールは例外なく適用したい'],['b','困っている同僚がいたら、自分の作業を止めてでも助ける'],
+      ['a','議論では、人よりも論点そのものに集中する'],['b','正しさよりも、関係者の納得感を重視したい']],
+  JP:[['a','仕事は計画やスケジュールを立ててから始めたい'],['b','状況に応じて、やり方を臨機応変に変えたい'],
+      ['a','締め切りよりかなり前に終わらせておきたい'],['b','締め切り直前のほうが集中力が上がる'],
+      ['a','タスクリストやToDoで管理するのが好きだ'],['b','複数の仕事を並行して進めるのが苦にならない'],
+      ['a','一度決まったことが途中で変わるとストレスを感じる'],['b','計画を細かく決めすぎると窮屈に感じる']],
+  AT:[['a','仕事で失敗しても、すぐに気持ちを切り替えられる'],['b','周囲から自分がどう評価されているかが気になる'],
+      ['a','自分の判断に自信を持って仕事を進められる'],['b','ミスをすると、後々まで引きずりやすい']],
+};
+
+/* ====================== 16タイプ（仕事版） ====================== */
+const TYPES = {
+ INTJ:{n:'戦略プランナー',c:'全体像を描き、最短ルートで成果へ導く',
+  s:'物事の本質や構造を捉え、長期的な見通しを立てて動くタイプである。自分なりの判断基準が明確で、納得できる根拠があれば周囲に流されずに決断できる。一人で考え抜く時間を確保できると、質の高いアウトプットを出しやすい。',
+  w:'複雑な課題を分解し、仕組みや戦略に落とし込む業務で力を発揮する。非効率な慣習には疑問を持ち、改善案を論理的に示すことが多い。',
+  d:'想定外の事態や非合理な指示が続くと、説明を省いて一人で抱え込みやすい。結論だけでなく考えの経緯も共有し、相手の理解度に合わせて伝えることを意識するとよい。',
+  st:['長期視点での戦略立案','論理的な課題分解','高い自己基準と完遂力'],ca:['説明不足で独断的に見られやすい','感情面への配慮が後回しになりがち','完璧を求めて手放すのが遅れる'],
+  r:['事業企画・経営企画','データ分析・戦略立案','業務設計・仕組み化','広告運用の戦略設計'],m:['目的とゴールを示し、進め方は任せる','指摘は根拠を添えて論理的に伝える']},
+ INTP:{n:'ロジック探究者',c:'仕組みを解き明かし、誰も気づかない答えを見つける',
+  s:'知的好奇心が強く、物事の原理や「なぜ」を掘り下げることに喜びを感じるタイプである。前提を疑い、柔軟な視点で複数の可能性を検討できる。マイペースに考える余地があると、独自のアイデアが生まれやすい。',
+  w:'分析・検証・設計など、論理的思考を深く使う業務に向いている。正解がひとつでない課題でも、粘り強く仮説を立てて検証できる。',
+  d:'興味の持てない定型業務や細かな期限管理が重なると、着手が遅れたり集中が切れやすい。考えを形にする締め切りを自分で区切り、途中経過をこまめに共有するとよい。',
+  st:['本質を見抜く分析力','前提にとらわれない発想','複雑な問題への粘り強さ'],ca:['考えすぎて行動が遅れることがある','伝え方が抽象的になりやすい','興味の薄い業務の優先度が下がる'],
+  r:['データ分析・リサーチ','システム設計・開発','SEO・アルゴリズム研究','新しい手法の検証'],m:['考える時間と裁量を確保する','期限と期待する粒度を具体的に伝える']},
+ ENTJ:{n:'事業推進者',c:'目標を掲げ、人と組織を動かして結果を出す',
+  s:'決断力と推進力に優れ、目標に向かって周囲を巻き込みながら前進するタイプである。物事を効率的に組み立て、優先順位をつけて実行に移すのが速い。責任ある立場で裁量を与えられると力を発揮しやすい。',
+  w:'プロジェクトの統括や新規事業の立ち上げなど、方向性を示して人を動かす場面で強みが出る。数字やゴールから逆算して計画を立てることが得意である。',
+  d:'成果が出ない状況やスピード感の合わないメンバーに対して、強い口調や性急な判断になりやすい。相手の状況や気持ちを聞く時間をあえて取ることで、チームの推進力がさらに高まる。',
+  st:['意思決定の速さ','目標から逆算する計画力','人を巻き込む推進力'],ca:['周囲に高い基準を求めすぎる','結論を急いで意見を聞き漏らす','弱みを見せずに抱え込む'],
+  r:['プロジェクトマネージャー','営業・事業責任者','新規事業の立ち上げ','クライアントへの戦略提案'],m:['権限と責任をセットで任せる','意見は結論から簡潔に伝える']},
+ ENTP:{n:'企画イノベーター',c:'常識を揺さぶり、新しい可能性を切り開く',
+  s:'発想力と好奇心にあふれ、議論を通じてアイデアを広げていくタイプである。変化や新しい挑戦を楽しみ、状況に合わせて素早く方針を切り替えられる。自由に試せる環境で特に生き生きと働ける。',
+  w:'企画立案・提案・新規開拓など、ゼロから可能性を探る業務で力を発揮する。異なる意見をぶつけ合うことで考えを磨くのが得意である。',
+  d:'ルーティン業務や細部の詰めが続くと関心が薄れ、仕上げが甘くなることがある。実行管理を得意な人と分担したり、完了の基準を先に決めておくとよい。',
+  st:['豊富なアイデア','議論を前に進める柔軟さ','変化への適応力'],ca:['最後の詰めが甘くなりやすい','議論好きが反論ばかりと受け取られる','興味が次々に移る'],
+  r:['企画・プランナー','新規営業・アライアンス','提案書・コンペ対応','新サービス開発'],m:['新しいテーマや挑戦の機会を与える','実行段階はマイルストーンで一緒に確認する']},
+ INFJ:{n:'ビジョン伴走者',c:'人の可能性を信じ、意味のある未来へ導く',
+  s:'洞察力が深く、物事や人の本質的なニーズを汲み取るタイプである。自分の価値観や理想を大切にしながら、静かに周囲を支える。仕事に意味や目的を感じられると、粘り強く高い質で取り組める。',
+  w:'顧客の潜在ニーズを汲み取る提案や、人の成長を支援する業務に向いている。全体の方向性を考えながら、丁寧に物事を進められる。',
+  d:'自分の価値観に反する進め方や対立が続くと、内側に不満をため込みやすい。違和感は早い段階で言葉にし、一人で背負い込まず信頼できる人に相談するとよい。',
+  st:['本質的なニーズを見抜く洞察力','一貫した価値観と誠実さ','長期視点での丁寧な仕事'],ca:['理想が高く自分を追い込みやすい','本音を表に出さない','現実的な妥協が苦手'],
+  r:['コンサルティング・提案','人事・育成・採用','コンテンツ企画・編集','カスタマーサクセス'],m:['仕事の目的や意義を共有する','1on1で考えをじっくり聞く時間を取る']},
+ INFP:{n:'価値観クリエイター',c:'自分らしさと想いを、かたちにする',
+  s:'繊細な感受性と強い信念を持ち、自分が大切にしたい価値に沿って働きたいタイプである。人の気持ちに寄り添い、独自の視点で物事を表現できる。共感できるテーマに出会うと、驚くほどの集中力を発揮する。',
+  w:'ライティング・デザイン・企画など、想いや世界観を形にする業務で力を発揮する。相手の立場に立った丁寧なコミュニケーションが得意である。',
+  d:'批判や理不尽な評価を受けると、自分を責めたり意欲が下がりやすい。指摘は人格ではなく成果物に対するものと切り分け、小さな達成を自分で認める習慣を持つとよい。',
+  st:['共感力と細やかな配慮','独自の表現力','信念に基づく粘り強さ'],ca:['批判を個人的に受け止めやすい','計画的な進行が苦手なことがある','意見を飲み込みがち'],
+  r:['コピーライター・編集','クリエイティブ制作','ブランディング','ユーザーリサーチ'],m:['取り組みの意図や良さを具体的に認める','指摘は改善点を一緒に考える形で伝える']},
+ ENFJ:{n:'チームビルダー',c:'人の力を引き出し、チームをひとつにする',
+  s:'人への関心が高く、周囲を励まして前向きな雰囲気をつくるタイプである。相手の強みを見抜き、目標に向かってチームをまとめることが得意。人の成長や喜びに関われる仕事に大きなやりがいを感じる。',
+  w:'チームリーダー・顧客折衝・育成など、人と人をつなぎ動かす業務に向いている。関係者の意見をまとめ、合意形成を図る力に優れる。',
+  d:'周囲の期待に応えようとするあまり、仕事を引き受けすぎて疲弊することがある。自分のキャパシティを把握し、断ることや任せることも信頼関係の一部だと考えるとよい。',
+  st:['人を巻き込むコミュニケーション力','育成・動機づけの力','合意形成力'],ca:['頼まれると断れない','人の評価を気にしすぎる','対立を避けて決断が遅れる'],
+  r:['チームリーダー・マネージャー','アカウントプランナー','人事・研修','顧客折衝・営業'],m:['周囲への貢献や影響を言葉で伝える','業務量を一緒に棚卸しする']},
+ ENFP:{n:'アイデア発信者',c:'ワクワクを生み出し、人と可能性をつなぐ',
+  s:'明るく好奇心旺盛で、新しいアイデアや人との出会いからエネルギーを得るタイプである。周囲を巻き込む熱量があり、場の雰囲気を前向きに変えられる。自由度の高い環境で多様なことに挑戦すると力を発揮しやすい。',
+  w:'企画・プロモーション・営業など、人との関わりの中でアイデアを生かす業務に向いている。発想を広げ、周囲の共感を得ながら進めるのが得意である。',
+  d:'タスクが多すぎたり単調な作業が続くと、優先順位が曖昧になり抜け漏れが出やすい。やることを書き出して絞り込み、進捗を誰かと共有する仕組みをつくるとよい。',
+  st:['発想力と行動力','人を惹きつける熱量','多様な人とつながる力'],ca:['タスクを広げすぎる','細かな管理や事務処理が後回しになる','気分の波が出やすい'],
+  r:['プランナー・プロモーション','営業・提案','SNS・コミュニティ運営','新規事業'],m:['アイデアにまず前向きに反応する','優先順位と締め切りを一緒に整理する']},
+ ISTJ:{n:'堅実な実務家',c:'約束を守り、確実に仕事を積み上げる',
+  s:'責任感が強く、決められたことを正確にやり遂げるタイプである。事実や経験に基づいて判断し、手順を守って着実に仕事を進める。役割と期待が明確な環境で、安定して高い品質を発揮する。',
+  w:'運用・管理・品質チェックなど、正確さと継続性が求められる業務で信頼される。ミスや抜け漏れに気づく注意力が高い。',
+  d:'急な方針転換や曖昧な指示が続くと、ストレスを感じて柔軟さを欠きやすい。変更の背景を確認し、守るべきことと変えてよいことを切り分けて考えるとよい。',
+  st:['正確さと責任感','計画的な業務遂行','継続的な改善と標準化'],ca:['変化への対応に時間がかかる','前例にこだわりやすい','意見を表に出しにくい'],
+  r:['広告運用・レポーティング','経理・法務などの管理部門','品質管理・チェック業務','業務マニュアルの整備'],m:['期待する成果と手順を明確に伝える','変更時は理由と背景を説明する']},
+ ISFJ:{n:'縁の下の支援者',c:'細やかな気配りで、チームを確かに支える',
+  s:'誠実で思いやりがあり、周囲が働きやすいよう細やかに支えるタイプである。人の役に立つことに喜びを感じ、任されたことを丁寧にやり遂げる。安心できる人間関係の中で着実に力を発揮する。',
+  w:'サポート・顧客対応・事務管理など、正確さと気配りの両方が必要な業務で頼りにされる。相手の小さな変化やニーズにもよく気づく。',
+  d:'頼まれごとを抱え込み、負担が大きくなっても我慢してしまうことがある。困っていることを早めに伝え、自分の貢献を周囲に見える形で共有するとよい。',
+  st:['細やかな気配り','丁寧で正確な仕事','安定した信頼関係づくり'],ca:['自分の意見や負担を言い出しにくい','変化を不安に感じやすい','自己評価が控えめ'],
+  r:['カスタマーサポート','アシスタント・営業事務','人事・総務','運用サポート'],m:['日頃の貢献に具体的に感謝を伝える','困りごとを聞く場を定期的に設ける']},
+ ESTJ:{n:'組織マネージャー',c:'ルールと仕組みで、チームを確実に前に進める',
+  s:'現実的で決断力があり、組織やプロジェクトを効率よく管理するタイプである。役割分担や手順を明確にし、期日までに成果を出すことを重視する。リーダーとして責任を持たされると頼もしさを発揮する。',
+  w:'進行管理・チーム運営・営業管理など、計画を立てて人と仕事を管理する業務で強みが出る。曖昧な状況を整理し、具体的な行動に落とすのが得意である。',
+  d:'計画どおりに進まないときやルールを守らない人がいると、厳しく管理しすぎる傾向がある。結果だけでなく背景や相手の事情に耳を傾けると、チームの自発性が高まる。',
+  st:['実行力と管理能力','責任感とリーダーシップ','段取りと効率化'],ca:['やり方を押し付けがちになる','新しい方法への抵抗感','感情面への配慮が不足しやすい'],
+  r:['営業マネージャー・チームリーダー','プロジェクト進行管理','業務改善・オペレーション','管理部門'],m:['役割・期限・評価基準を明確にする','結論と数字で報告する']},
+ ESFJ:{n:'調整役コーディネーター',c:'人と人をつなぎ、みんなが動きやすい場をつくる',
+  s:'協調性が高く、周囲のニーズに気を配りながら場を調整するタイプである。人の役に立つことや感謝されることに大きなやりがいを感じる。チームの和を大切にし、関係者が気持ちよく働ける環境を整える。',
+  w:'顧客折衝・社内調整・イベント運営など、多くの人と関わりながら物事を前に進める業務に向いている。相手に合わせた対応が得意である。',
+  d:'周囲との関係がぎくしゃくしたり、評価されていないと感じると不安が強まりやすい。全員の期待に応えることより、優先すべきことを決めて伝える勇気を持つとよい。',
+  st:['調整力と気配り','関係者を巻き込む力','丁寧で責任感のある対応'],ca:['人の評価を気にしすぎる','波風を立てるのを避けがち','頼まれごとを抱え込む'],
+  r:['営業・アカウント担当','ディレクター・進行管理','人事・広報','イベント・コミュニティ運営'],m:['感謝と評価をこまめに伝える','判断基準や優先度をはっきり示す']},
+ ISTP:{n:'現場の問題解決者',c:'冷静に状況を読み、手を動かして解決する',
+  s:'冷静で観察力が高く、目の前の問題を合理的に解決するタイプである。必要以上に周囲に左右されず、自分のやり方で効率よく成果を出す。自由度があり、実際に手を動かせる環境で力を発揮する。',
+  w:'トラブル対応・技術検証・ツール活用など、実践的なスキルを使う業務に向いている。緊急時にも落ち着いて状況を判断できる。',
+  d:'細かなルールや過度な報告を求められると、意欲を失ったり反発しやすい。自分のやり方の意図を簡潔に共有し、周囲と進め方をすり合わせるとよい。',
+  st:['冷静な判断力','実践的な問題解決力','効率重視の行動力'],ca:['報連相が不足しがち','長期計画への関心が薄い','感情表現が少なく冷たく見られる'],
+  r:['エンジニア・テクニカル担当','広告運用・タグ設定','トラブルシューティング','業務自動化・ツール開発'],m:['やり方を細かく指定せず任せる','報告のタイミングと形式だけ合意しておく']},
+ ISFP:{n:'職人肌の表現者',c:'感性を大切に、目の前の仕事を丁寧に仕上げる',
+  s:'穏やかで柔軟性があり、自分の感性や美意識を仕事に生かすタイプである。押し付けを嫌い、相手のペースも尊重する。自分らしく働ける環境で、こだわりのある質の高いアウトプットを出す。',
+  w:'デザイン・制作・顧客対応など、感性と丁寧さが求められる業務に向いている。相手の好みや雰囲気を感じ取る力がある。',
+  d:'急かされたり強い主張の中にいると、自分の意見を引っ込めてしまいがちである。小さなことからでも考えを言葉にし、得意なことを周囲に知ってもらうとよい。',
+  st:['感性と美意識','柔軟で穏やかな対応','丁寧なものづくり'],ca:['自己主張が控えめ','長期計画を立てるのが苦手','対立を避けがち'],
+  r:['デザイナー・クリエイター','動画・写真制作','UI/UXデザイン','接客・カスタマー対応'],m:['本人のこだわりや工夫を認める','意見を求める場面をつくる']},
+ ESTP:{n:'行動派プレイヤー',c:'まず動き、チャンスをつかみとる',
+  s:'エネルギッシュで行動が速く、変化の激しい状況を楽しむタイプである。現実的に状況を読み、その場で最適な手を打てる。成果が目に見えやすい仕事や、スピード感のある環境で力を発揮する。',
+  w:'新規営業・交渉・現場対応など、即断即決と行動力が求められる業務に向いている。人との駆け引きや臨機応変な対応が得意である。',
+  d:'じっくり考える必要のある課題や長期的な準備が続くと、退屈して仕事が雑になりやすい。動く前に一呼吸おいてリスクを確認し、振り返りの時間を習慣にするとよい。',
+  st:['行動の速さ','交渉力・対人突破力','臨機応変な対応'],ca:['計画や準備が不足しやすい','リスクを軽視しがち','単調な業務で集中が切れる'],
+  r:['新規営業・インサイドセールス','交渉・アライアンス','イベント・現場運営','広告の短期改善施策'],m:['目に見える目標と裁量を渡す','振り返りの場を短く定期的に設ける']},
+ ESFP:{n:'現場の盛り上げ役',c:'明るさと行動力で、場を動かす',
+  s:'社交的で明るく、周囲を楽しませながら仕事を進めるタイプである。人の気持ちに敏感で、その場の空気を読んで柔軟に動ける。人と関わり、反応がすぐ返ってくる仕事に大きなやりがいを感じる。',
+  w:'接客・営業・イベント・SNS運用など、人を相手に場を盛り上げる業務に向いている。初対面の相手ともすぐに打ち解けられる。',
+  d:'先の見えない長期業務や細かな数字管理が続くと、後回しにしがちになる。楽しさを感じる要素を仕事に組み込みつつ、期限から逆算した小さな計画を立てるとよい。',
+  st:['明るさと親しみやすさ','現場での対応力','人を楽しませる発信力'],ca:['長期計画や準備が苦手','細かな数字管理を後回しにしがち','楽な方へ流されやすい'],
+  r:['営業・接客','SNS運用・インフルエンサー施策','イベント・PR','カスタマー対応'],m:['成果や頑張りをその場で褒める','期限から逆算した計画を一緒に立てる']},
+};
+const AT_NOTE = {
+  A:'安定型（A）のあなたはプレッシャーに強い一方、問題を軽く見積もってしまう場合がある。周囲の懸念にも一度耳を傾ける姿勢を持つとよい。',
+  T:'慎重型（T）のあなたは問題の兆しに早く気づける一方、不安から自分を追い込みやすい。完璧でなくても早めに共有し、周囲の力を借りるとよい。'
+};
+const DISLIKE_TYPE = {J:'直前の予定変更や、ゴールの曖昧な指示',P:'細かすぎるルールや、やり方の固定',T:'根拠の説明がないままの決定',F:'人間関係の対立やギスギスした雰囲気',E:'一人きりで長時間こもる業務',I:'考える時間のない即答の連続'};
+
+/* ====================== モチベーション・リソース ====================== */
+const RES = [
+ {k:'shonin',l:'承認',v:'評価を得る',tags:['人に認められる','成果が評価される'],
+  q:['成果を上司や顧客に褒められると、一気にやる気が出る','社内で表彰や評価を受けることは大きな励みになる','自分の仕事に反応やフィードバックがないと張り合いがない'],
+  d:'自分の能力や成果が認められたり、周囲から期待されているのを感じるとやる気が高まります。',g:'成果をきちんと示せるあなたは、周囲に良い刺激を与えているでしょう。',t:'他者からの評価だけに頼らず、自分なりの達成基準も持っておくと安定して頑張れます。',
+  mg:'成果をその場で具体的に褒め、周囲にも共有する',o:'最近うまくいった仕事と、そこでの工夫',dn:'成果に反応がない、評価の基準が見えない'},
+ {k:'shinwa',l:'親和',v:'つながる',tags:['気持ちのつながり','良好な人間関係'],
+  q:['仲の良いチームで働けることが何より大事だ','仕事仲間と雑談や食事をする時間が好きだ','チーム一丸となって目標を達成したときに最も喜びを感じる'],
+  d:'仲間と良い関係を築き、一体感を持って働けることに喜びを感じます。',g:'人を大切にするあなたは、周囲に温かい雰囲気を生み出しているでしょう。',t:'関係を大事にするあまり、言うべきことを飲み込まないよう意識しましょう。',
+  mg:'チームで取り組む場や雑談の時間を大切にする',o:'チーム内の関係で気になっていること',dn:'孤立した状態での作業や、人間関係の摩擦'},
+ {k:'toritsu',l:'統率',v:'リードする',tags:['人を動かす','責任ある役割'],
+  q:['プロジェクトやチームを率いる役割を任されたい','自分の判断で人や物事を動かせるとやりがいを感じる','将来はマネジメントのポジションに就きたい'],
+  d:'チームを率いたり、責任の大きな仕事を任されたりすると意欲が高まります。',g:'目標に向かって周囲を引っ張るあなたは、頼れる存在になっているでしょう。',t:'メンバーの得意なことや、やりたいことを知ると、さらに信頼されるリーダーになれます。',
+  mg:'リーダー役や小さなプロジェクトの責任者を任せる',o:'任されたい役割や将来のポジション',dn:'決定権がなく、指示を待つしかない状況'},
+ {k:'chosen',l:'挑戦',v:'挑む',tags:['高い目標','前例のない仕事'],
+  q:['難易度の高い目標ほど燃える','前例のない仕事を任されるとワクワクする','簡単すぎる仕事が続くと退屈を感じる'],
+  d:'難しい課題や高い目標に挑み、乗り越えることにやりがいを感じます。',g:'困難を楽しめるあなたは、チームの限界を押し広げる存在でしょう。',t:'挑戦の連続で消耗しないよう、成果の振り返りと休息も計画に入れましょう。',
+  mg:'ストレッチ目標や新しいテーマを任せる',o:'次に挑戦してみたいテーマ',dn:'簡単すぎる業務や、変化のない仕事の繰り返し'},
+ {k:'sozo',l:'創造',v:'生み出す',tags:['アイデアを形にする','工夫・改善'],
+  q:['自分のアイデアが形になる仕事がしたい','企画やデザインなど、ゼロから何かを生み出すのが好きだ','既存のやり方を改善する工夫を考えるのが楽しい'],
+  d:'自分のアイデアで新しいものを生み出したり、やり方を工夫できたりするとやる気が湧きます。',g:'発想を形にできるあなたは、チームに新しい風を吹き込んでいるでしょう。',t:'アイデアを実行まで運ぶために、仲間を巻き込む工夫もしてみましょう。',
+  mg:'企画や改善提案の機会を与え、試す余地を残す',o:'試してみたいアイデアや改善案',dn:'決められた手順どおりの作業ばかりの状態'},
+ {k:'senmon',l:'専門性',v:'極める',tags:['知識・スキル','その道のプロ'],
+  q:['特定の分野で第一人者と呼ばれる存在になりたい','新しい知識やスキルを身につけること自体が楽しい','幅広く浅くよりも、ひとつのことを深く極めたい'],
+  d:'専門性を高めたり、新しい知識やスキルを身につけたりすることに喜びを感じます。',g:'学び続けるあなたは、チームの頼れる知恵袋になっているでしょう。',t:'得た知識を周囲に共有すると、専門性が組織の力になり、評価にもつながります。',
+  mg:'研修や資格取得、専門領域を任せる機会を用意する',o:'伸ばしたいスキルと学びの計画',dn:'学びのない業務や、専門外の雑務の連続'},
+ {k:'koken',l:'貢献',v:'役に立つ',tags:['誰かの役に立つ','社会への貢献'],
+  q:['顧客や社会の役に立っていると実感できると頑張れる','誰かに「ありがとう」と言われるのが一番のやりがいだ','自分の利益より、会社やチームの目標達成を優先できる'],
+  d:'顧客やチーム、社会の役に立っていると実感できると頑張れます。',g:'相手のために動けるあなたは、多くの人から感謝されているでしょう。',t:'人のためを優先しすぎず、自分の成長やキャリアにも目を向けましょう。',
+  mg:'顧客の声や、仕事の成果が誰に届いたかを伝える',o:'仕事で手応えを感じた顧客やチームの反応',dn:'誰の役に立っているのか見えない仕事'},
+ {k:'antei',l:'安定',v:'安心する',tags:['見通しが立つ','安定した環境'],
+  q:['雇用や収入が安定していることは働くうえで重要だ','見通しの立つ仕事のほうが安心して力を出せる','ワークライフバランスを保てる働き方を重視する'],
+  d:'先の見通しが立ち、安心できる環境で働けると力を発揮しやすくなります。',g:'着実に働けるあなたは、チームに安心感を与えているでしょう。',t:'変化を少しずつ取り入れることで、安心できる範囲そのものを広げていけます。',
+  mg:'方針や変更点を早めに共有し、見通しを示す',o:'今後の見通しで不安に感じていること',dn:'方針が頻繁に変わる、先行きが不透明な状況'},
+ {k:'hoshu',l:'報酬',v:'稼ぐ',tags:['収入・待遇','成果への対価'],
+  q:['成果が給与や賞与にしっかり反映されるとやる気が出る','収入アップは仕事を頑張る大きな理由のひとつだ','待遇の良さは職場を選ぶうえで重要な基準だ'],
+  d:'成果が給与や待遇にしっかり反映されると意欲が高まります。',g:'成果に貪欲なあなたは、チームの数字を力強く支えているでしょう。',t:'報酬に加えて、その仕事で得られるスキルや経験にも価値を見出しましょう。',
+  mg:'評価制度や、成果と報酬の関係を明確に伝える',o:'評価・報酬につながる目標の設定',dn:'成果が待遇に反映されない状況'},
+ {k:'jiritsu',l:'自律',v:'任される',tags:['自分のペース','裁量・自由'],
+  q:['進め方を細かく指示されるより、任せてほしい','自分のペースや時間配分で働ける環境が合っている','裁量が大きい仕事ほど力を発揮できる'],
+  d:'やり方や時間配分を自分で決められる環境で、最も力を発揮します。',g:'自走できるあなたは、安心して仕事を任せられる存在でしょう。',t:'自由に進める分、進捗をこまめに共有すると周囲からの信頼がさらに高まります。',
+  mg:'ゴールだけ合意し、進め方は任せる',o:'任せてほしい範囲と報告の頻度',dn:'細かな指示やマイクロマネジメント'},
+];
+
+/* ====================== 仕事観（10点配分） ====================== */
+const VALS = [
+ {k:'purpose',g:'life',title:'働く目的',q:'自分の力を高める？ 組織や周囲に貢献する？',an:'自己成長',bn:'組織貢献',
+  items:[['仕事を通じて自分の能力を高めたい','会社やチームの目標達成に貢献したい'],['キャリアの選択肢を広げられる仕事がしたい','周囲の期待に応えられる仕事がしたい']],
+  A:['仕事を通じて自分が成長したい','スキルを高めることで、結果的に組織にも貢献したいと考えています。','成長の先に誰の役に立つのかも意識すると、仕事の意味がさらに広がるでしょう。'],
+  B:['周囲の期待に応え組織に貢献したい','チームや会社の目標達成に自分の力を役立てることにやりがいを感じます。','貢献とあわせて、自分自身の成長目標も言葉にしておくとよいでしょう。']},
+ {k:'growth',g:'life',title:'成長観',q:'今の自分を生かす？ 今の自分を変える？',an:'自分らしさを生かす',bn:'自分を変える',
+  items:[['今の強みや持ち味を伸ばしたい','苦手を克服して新しい自分になりたい'],['自然体で働けることが成果につながる','背伸びするくらいの環境が成長につながる']],
+  A:['仕事の中で自分らしさを生かしたい','無理に背伸びせず、持ち味を発揮することが成果につながると考えています。','得意を軸に少しずつ領域を広げると、自分らしさの幅が広がるでしょう。'],
+  B:['仕事を通じて今の自分を変えたい','新しい環境や苦手な課題にも向き合い、自分を更新していくことを大切にしています。','変化を求めるあまり、今ある強みを過小評価しないようにしましょう。']},
+ {k:'proc',g:'task',title:'課題遂行',an:'プロセス',bn:'成果',
+  items:[['結果だけでなく、取り組み方も大切にしたい','手段にこだわらず結果を出すことが大切だ'],['丁寧に進めて関係者の納得を得たい','スピードを優先して早く成果を出したい']],
+  pa:'取り組みの過程や関係者の納得を大切にしながら',pb:'成果やスピードを重視しながら',p0:'プロセスと成果の両方に目を配りながら',
+  oa:'アウトプットのスピードや結果にもこだわる',ob:'関係者の納得や進め方の丁寧さにも目を向ける'},
+ {k:'risk',g:'task',title:'課題遂行',an:'リスク回避',bn:'チャレンジ',
+  items:[['失敗しないよう、準備を重ねてから進めたい','失敗を恐れず、まず試してみたい'],['実績のある方法を選びたい','新しい方法を積極的に取り入れたい']],
+  pa:'準備を重ねて着実に進める',pb:'失敗を恐れず新しいことに挑む',p0:'慎重さと挑戦のバランスをとって進める',
+  oa:'まずは小さく試してみる',ob:'事前にリスクを洗い出しておく'},
+ {k:'collab',g:'team',title:'協働',an:'協力を得る',bn:'自力で完結',
+  items:[['周囲の力を借りながら進めたい','なるべく自分の力でやり遂げたい'],['困ったらすぐに相談する','まずは自分で考え抜く']],
+  pa:'周囲の協力を得ながら',pb:'なるべく自力で',p0:'自力と協力を使い分けながら',
+  oa:'自分で考え抜く時間をとる',ob:'早めに周囲に相談する'},
+ {k:'div',g:'team',title:'協働',an:'同質性',bn:'多様性',
+  items:[['価値観の近い人と働きたい','さまざまな価値観の人と働きたい'],['阿吽の呼吸で進められるチームが好きだ','異なる意見がぶつかり合うチームが好きだ']],
+  pa:'価値観の近い人たちと働く',pb:'さまざまな価値観の人と刺激し合える',p0:'同質なチームにも多様なチームにも適応できる',
+  oa:'意見の異なる人の考えを取り入れる',ob:'チーム内の共通認識をそろえる'},
+];
+
+/* ====================== 場面選択モードの設問 ======================
+   SJ-DATA-BEGIN（仕様書の生成にも使うので、この範囲はデータだけにする）
+   性格・仕事観：選択肢の数値は左の極（E/S/T/J/A）または仕事観のB側に寄るほど＋。±2＝はっきり、±1＝やや。
+   モチベーション：選択肢ごとに10項目のどれか1つに対応。各項目がちょうど6回ずつ登場する。 */
+const SJ = {
+  EI:[
+    ['新しいプロジェクトのキックオフ会議で、アイデアを出し合うことになった。あなたはどうする？',
+     [['思いついたことを、その場でどんどん口に出す',2],['他の人の意見に乗りながら、話しつつ考えをまとめる',1],['少し考えを整理してから、まとまった意見を1つ言う',-1],['その場ではあまり発言せず、会議のあとに考えをまとめて共有する',-2]]],
+    ['仕事終わりに、部署の懇親会に誘われた。特に予定はない。',
+     [['喜んで参加し、普段あまり話さない人にも話しかける',2],['参加して、知っている人と楽しく過ごす',1],['顔は出すが、早めに切り上げる',-1],['今日は一人で過ごしたいので、丁寧に断る',-2]]],
+    ['ここ数日、一人で黙々と資料を作る日が続いている。',
+     [['物足りなくなって、用事を作って誰かと話しに行く',2],['合間に雑談や打ち合わせを入れて、気分を変えたくなる',1],['特に不満はなく、そのまま集中して進める',-1],['むしろはかどるので、このペースが続いてほしい',-2]]],
+    ['初めて会う取引先と、本題の前に雑談する時間がある。',
+     [['自分から話題を振って、場を盛り上げる',2],['相手の話に合わせて、自然に会話を広げる',1],['聞かれたことに答えつつ、早めに本題に入りたい',-1],['何を話せばよいか迷い、相手が話してくれるのを待つ',-2]]],
+    ['仕事で行き詰まった。最初にとる行動は？',
+     [['すぐに誰かをつかまえて、話しながら整理する',2],['近くの人に、軽く意見を聞いてみる',1],['一人で紙やメモに書き出して整理する',-1],['いったん席を離れ、一人でじっくり考える時間をとる',-2]]],
+    ['急ぎで確認したいことがある。相手は社内にいて、手は空いていそうだ。',
+     [['すぐに席まで行って、直接聞く',2],['電話かオンライン通話で聞く',1],['チャットで要点を送り、返事を待つ',-1],['経緯も含めて文章にまとめ、メールで送る',-2]]],
+    ['大事な提案資料を任された。どう進める？',
+     [['早めに周りの人に話して、反応を見ながら固めていく',2],['骨子ができたら、何人かに意見を聞いて直す',1],['ほぼ完成するまで一人で作り込み、最後に確認してもらう',-1],['一人で考え抜き、完成させてから初めて見せる',-2]]],
+    ['研修で、初対面の人たちとグループワークをすることになった。',
+     [['進んで司会や発表役を引き受ける',2],['積極的に意見を出して、議論に加わる',1],['求められたら意見を言い、記録や資料づくりで貢献する',-1],['聞き役に回り、議論の内容をじっくり考える',-2]]],
+  ],
+  SN:[
+    ['新しい業務の手順を覚えることになった。どう覚える？',
+     [['マニュアルを最初から順番に読み、手順どおりに試す',2],['先輩の実際のやり方を見て、真似して覚える',1],['全体の流れと目的をつかみ、細かいところは進めながら覚える',-1],['もっと良いやり方はないかを考えながら、自分なりに組み立てる',-2]]],
+    ['上司から「売上を伸ばす施策を考えてほしい」と頼まれた。最初にやることは？',
+     [['過去の数字を集めて、どこが落ちているかを確かめる',2],['他社や過去の成功事例を調べる',1],['市場がこの先どう変わっていくかを考える',-1],['今までにない新しい切り口を、自由に発想する',-2]]],
+    ['会議の資料を受け取った。最初に目が向くのは？',
+     [['数字や日付が正しいかどうか',2],['具体的に、誰が何をいつまでにやるのか',1],['その施策がどんな狙いで、何につながるのか',-1],['書かれていない可能性や、別の打ち手はないか',-2]]],
+    ['新しい業務ツールが社内で紹介された。',
+     [['使い方が定まり、評判がわかってから使い始める',2],['必要な機能だけ確認して、今の業務で使えるところから使う',1],['何に使えそうか、いろいろ触って試してみる',-1],['このツールで仕事のやり方そのものを変えられないか、すぐ考え始める',-2]]],
+    ['上司からの指示が「いい感じにまとめておいて」とあいまいだった。',
+     [['形式・分量・期限を具体的に確認してから取りかかる',2],['過去の似た資料を探して、それに合わせて作る',1],['目的だけ確認して、あとは自分なりに考えて作る',-1],['自由にできるので、新しい構成を試してみる',-2]]],
+    ['人に何かを説明するとき、よく使う伝え方は？',
+     [['具体的な数字やデータを示す',2],['実際にあった具体例を挙げる',1],['たとえ話や比喩を使う',-1],['全体像やめざす姿から話す',-2]]],
+    ['仕事が立て込んでいる時期に、業務を改善するアイデアを思いついた。',
+     [['目の前の業務を優先し、アイデアは落ち着いてから考える',2],['メモだけ残して、すぐ今の業務に戻る',1],['少しだけ時間をとって、アイデアを形にしてみる',-1],['気になって、すぐにアイデアの検討を始めてしまう',-2]]],
+    ['同僚との雑談で、よく話題にするのは？',
+     [['実際にあった出来事や、身の回りの具体的な話',2],['仕事や生活に役立つ実用的な情報',1],['業界や社会がこれからどうなっていくか',-1],['「もし〜だったら」という仮定の話やアイデア',-2]]],
+  ],
+  TF:[
+    ['後輩が作った資料に、大きなミスを見つけた。',
+     [['ミスの箇所と理由を、そのままはっきり伝える',2],['事実を伝えたうえで、直し方を具体的に示す',1],['まず良い点を伝えてから、ミスをやんわり指摘する',-1],['落ち込まないよう、自分で気づけるように声をかける',-2]]],
+    ['チームでA案とB案のどちらかを選ぶ。データではA案が有利だが、メンバーの多くはB案を推している。',
+     [['データを根拠に、A案を推す',2],['A案を軸に、B案の良いところを取り入れられないか考える',1],['みんなが納得して動けるなら、B案でもよいと考える',-1],['メンバーの気持ちを大切にして、B案に賛成する',-2]]],
+    ['締め切り直前に、同僚が困っている様子だ。自分の作業もまだ残っている。',
+     [['自分の作業を優先し、終わってから声をかける',2],['状況を聞いてから、手伝うべきかを判断する',1],['自分の作業を少し後回しにして手伝う',-1],['すぐに手を止めて、手伝いに行く',-2]]],
+    ['期限を過ぎた申請は受け付けない決まりだ。親しい同僚が、1日遅れで申請を持ってきた。',
+     [['決まりなので、例外なく受け付けない',2],['今回は断り、次から遅れない方法を一緒に考える',1],['事情を聞いて、やむを得なければ受け付ける',-1],['困っているだろうから、今回は受け付ける',-2]]],
+    ['会議で、自分の意見に強く反対された。',
+     [['論点ごとに根拠を示して反論する',2],['相手の根拠を確かめ、どちらが正しいか検討する',1],['相手の立場や気持ちを考えて、言い方を工夫する',-1],['場の雰囲気が悪くならないよう、いったん引く',-2]]],
+    ['メンバーを評価する立場になった。いちばん重視するのは？',
+     [['数字であらわれる成果',2],['決められた基準を満たしているかどうか',1],['仕事への姿勢や努力',-1],['チームへの良い影響や、周りからの信頼',-2]]],
+    ['取引先に、お断りの連絡をすることになった。',
+     [['結論と理由を簡潔に伝える',2],['理由を丁寧に説明し、代わりの案があれば示す',1],['相手の気持ちに配慮した言葉を選んで、時間をかけて伝える',-1],['関係を大切にしたいので、まずは直接会うか電話で気持ちを伝える',-2]]],
+    ['同僚から仕事の悩みを相談された。',
+     [['原因を整理して、解決策を提案する',2],['話を聞いたうえで、具体的なアドバイスをする',1],['アドバイスより先に、まず気持ちに共感する',-1],['解決よりも、相手の気持ちが軽くなるまでじっくり話を聞く',-2]]],
+  ],
+  JP:[
+    ['2週間後が締め切りの仕事を受けた。',
+     [['その日のうちに予定を立て、前倒しで終わらせる',2],['ざっくり予定を決め、余裕をもって進める',1],['手が空いたときに、少しずつ進める',-1],['締め切りが近づいてから、一気に仕上げる',-2]]],
+    ['来週、初めて行く土地へ出張することになった。',
+     [['移動・訪問先・持ち物まで、事前に細かく決めておく',2],['主な予定だけ決めておく',1],['宿と移動だけ押さえて、あとは現地で決める',-1],['ほとんど決めずに、その場の流れで動く',-2]]],
+    ['進めていた計画が、上司の一言で途中から変わることになった。',
+     [['強いストレスを感じ、計画を一から組み直す',2],['少し戸惑うが、変更点を整理して計画を直す',1],['よくあることなので、すぐにやり方を切り替える',-1],['むしろ新しい展開を楽しめる',-2]]],
+    ['一日の仕事の始め方は？',
+     [['ToDoリストを作り、優先順位をつけてから始める',2],['その日にやることを、ざっと確認してから始める',1],['目についたものや急ぎのものから手をつける',-1],['その日の気分や状況で、やることを決める',-2]]],
+    ['複数の仕事を同時に頼まれた。',
+     [['1つずつ順番に片づけていく',2],['優先順位を決めて、なるべく順番に進める',1],['状況に応じて、行ったり来たりしながら進める',-1],['同時に並行して進めるほうが、むしろはかどる',-2]]],
+    ['会議が、結論の出ないまま終わりそうになった。',
+     [['時間を延ばしてでも、結論を出してから終えたい',2],['次回までに決めることと担当を、はっきりさせて終える',1],['情報がそろうまで、急いで決めなくてよいと考える',-1],['いろいろな案が出たこと自体に意味があると考える',-2]]],
+    ['細かい手順まで決まっている仕事を任された。',
+     [['決められた手順どおりに進めるのが安心だ',2],['基本は手順どおりにし、必要なら相談して変える',1],['目的に合っていれば、手順は自分なりに変えたい',-1],['手順に縛られると窮屈で、やる気が出にくい',-2]]],
+    ['締め切りの3日前。仕事は8割ほどできている。',
+     [['前倒しで仕上げて、見直しの時間をとる',2],['予定どおりのペースで仕上げる',1],['まだ余裕があるので、ほかの仕事を先にやる',-1],['直前のほうが集中できるので、ぎりぎりまで寝かせる',-2]]],
+  ],
+  AT:[
+    ['提出した資料に、上司からたくさんの修正指示が入った。',
+     [['指摘どおりに直せばよいと、すぐに気持ちを切り替える',2],['少し落ち込むが、その日のうちに立ち直る',1],['何が悪かったのか、しばらく考え込んでしまう',-1],['自分の評価が下がったのではと、何日も気になる',-2]]],
+    ['経験のない大きな案件を任されることになった。',
+     [['自分ならできると思い、前向きに引き受ける',2],['少し不安はあるが、なんとかなると考える',1],['失敗しないよう、念入りに準備してから臨みたい',-1],['本当に自分で大丈夫か、不安が頭から離れない',-2]]],
+    ['自分の判断で進めた仕事について、周りからまだ何の反応もない。',
+     [['自分の判断に自信があるので、特に気にならない',2],['必要があれば、そのうち何か言われるだろうと考える',1],['どう思われているか気になり、自分から確認したくなる',-1],['否定されているのではないかと、不安になる',-2]]],
+    ['大事なプレゼンの前日。',
+     [['いつもどおりに過ごして、よく眠れる',2],['軽く確認をして、早めに休む',1],['何度もリハーサルをして、細かいところまで詰める',-1],['うまくいかない場面ばかり想像して、落ち着かない',-2]]],
+  ],
+};
+const SJ_MOT = [
+  ['期末の振り返り面談で、言われていちばんうれしいのは？',
+   [['「今期いちばんの成果だった」と評価される','shonin'],['成果が認められ、賞与が上がると伝えられる','hoshu'],['「来期はもっと難しい目標を任せたい」と言われる','chosen'],['「この分野ではあなたがいちばん詳しい」と言われる','senmon']]],
+  ['新しい職場を選ぶとき、いちばん重視するのは？',
+   [['雇用が安定していて、長く働ける','antei'],['給与や待遇が良い','hoshu'],['社員どうしの仲が良く、雰囲気が良い','shinwa'],['働く時間や場所を、自分で決められる','jiritsu']]],
+  ['次の仕事を選べるとしたら、どれがいい？',
+   [['小さなチームのリーダーを務める仕事','toritsu'],['新しい企画をゼロから考える仕事','sozo'],['困っている顧客を、直接助ける仕事','koken'],['慣れた業務を、確実に回していく仕事','antei']]],
+  ['プロジェクトがうまくいった。いちばんうれしい瞬間は？',
+   [['チームのみんなで、達成を喜び合ったとき','shinwa'],['社内で表彰されたとき','shonin'],['顧客から「助かった」とお礼を言われたとき','koken'],['自分のアイデアが形になったと実感したとき','sozo']]],
+  ['会社の支援制度のうち、いちばん使いたいのは？',
+   [['資格取得や専門研修の費用補助','senmon'],['フレックスやリモートワークの制度','jiritsu'],['管理職をめざす人向けの研修','toritsu'],['住宅手当や退職金などの福利厚生','antei']]],
+  ['上司からの任され方で、いちばんうれしいのは？',
+   [['「進め方はすべて任せる」と言われる','jiritsu'],['「メンバーをまとめてほしい」と言われる','toritsu'],['「誰もやったことのない仕事だが、頼みたい」と言われる','chosen'],['「あなたの成果に期待している」と言われる','shonin']]],
+  ['毎日の仕事で、いちばん張り合いを感じるのは？',
+   [['自分の仕事が、誰かの役に立っていると感じるとき','koken'],['新しい知識やスキルが身についたと感じるとき','senmon'],['頑張った分が、収入に結びつくと感じるとき','hoshu'],['仲間と冗談を言い合いながら働けるとき','shinwa']]],
+  ['1年後の自分として、いちばん理想に近いのは？',
+   [['チームを率いて、大きな成果を上げている','toritsu'],['特定の分野で、社内外から頼られる存在になっている','senmon'],['無理なく働き、仕事も生活も充実している','antei'],['自分が考えたサービスや企画が、世に出ている','sozo']]],
+  ['社内の新規プロジェクトでメンバーを募集している。いちばん参加したくなる理由は？',
+   [['難易度が高く、成功すれば会社で初めての取り組みになる','chosen'],['気の合うメンバーと一緒に取り組める','shinwa'],['自分の裁量で、自由に進められる','jiritsu'],['成功すれば、特別な報酬が出る','hoshu']]],
+  ['仕事で疲れているとき、いちばん元気が出るのは？',
+   [['上司から「よくやっている」と声をかけられる','shonin'],['同僚とランチで雑談する','shinwa'],['顧客からの感謝のメールを読み返す','koken'],['先の見通しが立って、ほっとする','antei']]],
+  ['担当業務を改善する機会をもらった。いちばんやりたいのは？',
+   [['今までにない、新しいやり方を考える','sozo'],['最新の手法を学んで取り入れる','senmon'],['関係者をまとめて、改善を主導する','toritsu'],['自分のペースで、納得いくまで作り込む','jiritsu']]],
+  ['転職の誘いが来た。いちばん心が動く条件は？',
+   [['年収が大きく上がる','hoshu'],['今より難しく、成長できる仕事に挑める','chosen'],['働き方の自由度が高い','jiritsu'],['これまでの実績が高く評価され、良い役職で迎えられる','shonin']]],
+  ['チームの目標が決まった。あなたの気持ちに近いのは？',
+   [['目標が高いほど燃える','chosen'],['チームの役に立てるよう、自分にできることをしたい','koken'],['無理のない目標で、確実に達成したい','antei'],['自分が中心になって、チームを引っ張りたい','toritsu']]],
+  ['仕事を通じて、いちばん手に入れたいものは？',
+   [['「その道のプロ」と呼ばれる腕','senmon'],['十分な収入と、ゆとりのある暮らし','hoshu'],['長く付き合える仕事仲間','shinwa'],['自分の名前が残る作品や企画','sozo']]],
+  ['理想の職場の雰囲気は？',
+   [['成果を出した人が、きちんと称賛される','shonin'],['誰かのために動くことが、当たり前になっている','koken'],['失敗を恐れず、難しいことに挑む人が多い','chosen'],['新しいアイデアが、次々に出てくる','sozo']]],
+];
+const SJ_VAL = {
+  purpose:[
+    ['新しい仕事を任された。まず考えるのは？',
+     [['この仕事で、自分にどんな力がつくか',-2],['自分の得意を生かして、どう成長できるか',-1],['自分の力で、チームにどう役立てるか',1],['チームや会社の目標達成に、どれだけ貢献できるか',2]]],
+    ['キャリアの分かれ道。あなたが選ぶのは？',
+     [['他社でも通用するスキルが身につく部署に異動する',-2],['将来の選択肢が広がる、新しい分野の仕事に手を挙げる',-1],['今のチームに残り、メンバーの期待に応える',1],['会社がいちばん力を入れている部署を支える',2]]],
+  ],
+  growth:[
+    ['次の半年の目標を立てることになった。',
+     [['得意なことを、さらに磨く目標にする',-2],['得意なことを軸に、少しだけ範囲を広げる目標にする',-1],['苦手なことを1つ選び、克服する目標にする',1],['これまでやったことのない領域に挑む目標にする',2]]],
+    ['別の部署への異動を打診された。',
+     [['今の強みがそのまま生かせる部署なら受けたい',-2],['自分らしく働けそうなら受けたい',-1],['少し背伸びが必要でも、成長できそうなら受けたい',1],['まったく経験のない部署でこそ自分を変えられると思い、受けたい',2]]],
+  ],
+  proc:[
+    ['成果は出たが、進め方に問題があった案件を振り返る。',
+     [['進め方の問題を重く見て、しっかり改善策を話し合う',-2],['成果は認めつつ、進め方も見直す',-1],['進め方の反省は手短にして、成果を次につなげる',1],['結果が出たのだから、進め方は大きな問題ではない',2]]],
+    ['急ぎの案件だが、関係者の合意がまだ取れていない。',
+     [['時間がかかっても、全員の合意を取ってから進める',-2],['主な関係者の合意だけは取ってから進める',-1],['進めながら、並行して合意を取りつける',1],['まず進めて結果を見せ、あとから理解を得る',2]]],
+  ],
+  risk:[
+    ['新しい施策を始めることになった。',
+     [['考えられるリスクをすべて洗い出し、対策してから始める',-2],['主なリスクだけ確認してから始める',-1],['小さく試して、様子を見ながら広げる',1],['まずやってみて、問題が出たらその場で直す',2]]],
+    ['業務のやり方を選ぶことになった。',
+     [['社内で実績のある方法を、そのまま使う',-2],['実績のある方法を、少しだけ改良して使う',-1],['新しい方法を、一部に取り入れてみる',1],['話題の新しい方法を、思い切って取り入れる',2]]],
+  ],
+  collab:[
+    ['自分には難しい作業が出てきた。',
+     [['得意な人にすぐ頼んで、手伝ってもらう',-2],['詳しい人にやり方を教わりながら進める',-1],['まずは自分で調べて、わからない点だけ聞く',1],['時間がかかっても、自分の力でやり切る',2]]],
+    ['仕事で困ったことが起きた。',
+     [['すぐに上司や同僚に相談する',-2],['少し考えてから、早めに相談する',-1],['自分で考えられるだけ考えてから相談する',1],['自分で解決策を見つけるまで、なるべく相談しない',2]]],
+  ],
+  div:[
+    ['チームに新しいメンバーを迎える。どんな人がいい？',
+     [['考え方が自分たちに近く、すぐなじめる人',-2],['価値観は近く、少し違う経験を持っている人',-1],['自分たちとは違う視点を持ち込んでくれる人',1],['経歴も価値観も、まったく違う人',2]]],
+    ['理想のチームの会議は？',
+     [['言わなくても通じ合い、すぐに決まる',-2],['意見はそろいやすいが、確認はしっかりする',-1],['いろいろな意見が出て、議論しながら決まる',1],['意見が激しくぶつかり合い、その中から答えが生まれる',2]]],
+  ],
+};
+/* SJ-DATA-END */
+
+/* ====================== 設問リストとページ ====================== */
+const LK = [[-2,'そう思わない'],[-1,'あまりそう思わない'],[0,'どちらともいえない'],[1,'ややそう思う'],[2,'そう思う']];
+const AB = [[-2,'Aに近い'],[-1,'ややAに近い'],[0,'どちらともいえない'],[1,'ややBに近い'],[2,'Bに近い']];
+
+const partA = [];
+for (let i = 0; i < 8; i++) for (const ax of AXES) {
+  const it = QA[ax.k][i]; if (it) partA.push({id:`${ax.k.toLowerCase()}${i+1}`, type:'lk', ax:ax.k, p:it[0], t:it[1]});
+}
+const partB = [];
+for (let i = 0; i < 3; i++) for (const r of RES) partB.push({id:`m_${r.k}${i+1}`, type:'lk', res:r.k, t:r.q[i]});
+const pickItem = {id:'pick', type:'pick', t:'下の10項目のうち、あなたが働くうえで特に大事にしたいものを3つまで選んでください'};
+const partC = [];
+for (let i = 0; i < 2; i++) for (const v of VALS) partC.push({id:`v_${v.k}${i+1}`, type:'ab', val:v.k, a:v.items[i][0], b:v.items[i][1]});
+
+const chunk = (arr, n) => { const out = []; for (let i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n)); return out; };
+// 選択肢の並び順を設問ごとに固定でシャッフルする（強さの順に並ばないように）
+const shuffled = (id, n) => {
+  let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const idx = [...Array(n).keys()];
+  for (let i = n - 1; i > 0; i--) { h = (h * 1103515245 + 12345) >>> 0; const j = h % (i + 1); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+  return idx;
+};
+const sjA = [];
+for (let i = 0; i < 8; i++) for (const ax of AXES) {
+  const it = SJ[ax.k][i]; if (it) sjA.push({id:`s_${ax.k.toLowerCase()}${i+1}`, type:'ch', ax:ax.k, t:it[0], o:it[1]});
+}
+const sjB = SJ_MOT.map((it, i) => ({id:`s_m${i+1}`, type:'ch', mot:true, t:it[0], o:it[1]}));
+const sjC = [];
+for (let i = 0; i < 2; i++) for (const v of VALS) { const it = SJ_VAL[v.k][i]; sjC.push({id:`s_v_${v.k}${i+1}`, type:'ch', val:v.k, t:it[0], o:it[1]}); }
+for (const it of [...sjA, ...sjB, ...sjC]) it.order = shuffled(it.id, it.o.length);
+
+const MODES = {
+  lk: {label:'感じ方で答える', short:'5段階', pages:[
+    ...chunk(partA, 8).map(items => ({part:'パート1　性格タイプ', sub:'普段の仕事の場面を思い浮かべて', hint:'それぞれの文が、どのくらいあなたに当てはまるかを選んでください。', items})),
+    ...chunk(partB, 8).map(items => ({part:'パート2　モチベーション', sub:'あなたのやる気の源泉', hint:'働くうえで、それぞれの文がどのくらい当てはまるかを選んでください。', items})),
+    {part:'パート2　モチベーション', sub:'特に大事にしたいもの', hint:'1つ以上、3つまで選べます。', items:[pickItem]},
+    ...chunk(partC, 6).map(items => ({part:'パート3　仕事観・すすめ方', sub:'A と B のどちらに近いか', hint:'2つの考え方のうち、あなたの気持ちに近いほうを選んでください。', items})),
+  ]},
+  sj: {label:'場面で答える', short:'場面選択', pages:[
+    ...chunk(sjA, 6).map(items => ({part:'パート1　性格タイプ', sub:'仕事の場面での行動', hint:'それぞれの場面で、あなたが実際にとりそうな行動を1つ選んでください。理想ではなく、普段の自分に近いものを選びます。', items})),
+    ...chunk(sjB, 5).map(items => ({part:'パート2　モチベーション', sub:'あなたのやる気の源泉', hint:'それぞれ、あなたにいちばん当てはまるものを1つ選んでください。', items})),
+    {part:'パート2　モチベーション', sub:'特に大事にしたいもの', hint:'1つ以上、3つまで選べます。', items:[pickItem]},
+    ...chunk(sjC, 6).map(items => ({part:'パート3　仕事観・すすめ方', sub:'仕事の場面での考え方', hint:'それぞれの場面で、あなたの考えや行動にいちばん近いものを1つ選んでください。', items})),
+  ]},
+};
+for (const m of Object.values(MODES)) {
+  m.items = m.pages.flatMap(p => p.items);
+  m.nums = Object.fromEntries(m.items.map((it, i) => [it.id, i + 1]));
+}
+let PAGES, ALL, TOTAL;
+const setMode = m => { st.mode = MODES[m] ? m : 'lk'; PAGES = MODES[st.mode].pages; ALL = MODES[st.mode].items; TOTAL = ALL.length; };
+const qNum = it => MODES[st.mode].nums[it.id];
+
+/* ====================== 状態と保存 ====================== */
+const KEY = 'mbtiwork.v1';
+let st = {name:'', ans:{}, page:0, done:false, sample:false, consent:false, sentAt:null, mode:'lk'};
+try { const raw = localStorage.getItem(KEY); if (raw) st = Object.assign(st, JSON.parse(raw)); } catch (e) {}
+setMode(st.mode);
+if (!(st.page >= 0 && st.page < PAGES.length)) st.page = 0;
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
+const isAnswered = it => it.type === 'pick' ? Array.isArray(st.ans.pick) && st.ans.pick.length > 0 : st.ans[it.id] !== undefined;
+const answeredCount = () => ALL.filter(isAnswered).length;
+
+/* ====================== 画面切り替え ====================== */
+function show(view) {
+  for (const v of ['intro','quiz','report','admin']) $('#'+v).hidden = v !== view;
+  window.scrollTo(0, 0);
+}
+
+/* ====================== 設問描画 ====================== */
+function dotsHTML(id, scale, val) {
+  return `<div class="dots">${scale.map(([v, l]) => {
+    const cls = `s${Math.abs(v)} ${v < 0 ? 'neg' : v > 0 ? 'pos' : 'mid'}`;
+    return `<label class="dot ${cls}"><input type="radio" name="${id}" id="${id}_${v+2}" value="${v}" ${val === v ? 'checked' : ''} aria-label="${l}"><span></span></label>`;
+  }).join('')}</div>`;
+}
+function itemHTML(it) {
+  const val = st.ans[it.id];
+  const done = isAnswered(it) ? ' answered' : '';
+  const n = qNum(it);
+  if (it.type === 'lk') {
+    return `<fieldset class="q${done}" data-id="${it.id}"><legend><span class="qn">Q${n}</span>${esc(it.t)}</legend>
+      <div class="lk"><span class="end l">そう思わない</span>${dotsHTML(it.id, LK, val)}<span class="end r">そう思う</span></div></fieldset>`;
+  }
+  if (it.type === 'ab') {
+    return `<fieldset class="q${done}" data-id="${it.id}"><legend><span class="qn">Q${n}</span>あなたの考えはどちらに近いですか</legend>
+      <div class="ab"><div class="st a"><b>A</b>${esc(it.a)}</div>${dotsHTML(it.id, AB, val)}<div class="st b"><b>B</b>${esc(it.b)}</div></div></fieldset>`;
+  }
+  if (it.type === 'ch') {
+    return `<fieldset class="q${done}" data-id="${it.id}"><legend><span class="qn">Q${n}</span>${esc(it.t)}</legend>
+      <div class="opts">${it.order.map(i => `<label class="opt"><input type="radio" name="${it.id}" value="${i}" ${val === i ? 'checked' : ''}><span>${esc(it.o[i][0])}</span></label>`).join('')}</div></fieldset>`;
+  }
+  const picked = st.ans.pick || [];
+  return `<fieldset class="q" data-id="pick"><legend><span class="qn">Q${n}</span>${esc(it.t)}</legend>
+    <div class="picks">${RES.map(r => `<label class="pick"><input type="checkbox" id="pick_${r.k}" value="${r.k}" ${picked.includes(r.k) ? 'checked' : ''}><small>${r.v}</small><b>${r.l}</b><small>${r.tags.join('・')}</small></label>`).join('')}</div></fieldset>`;
+}
+function renderPage() {
+  const pg = PAGES[st.page];
+  $('#part-name').innerHTML = `${pg.part}<small>${pg.sub}</small>`;
+  $('#part-hint').textContent = pg.hint;
+  $('#qlist').innerHTML = pg.items.map(itemHTML).join('');
+  $('#back').textContent = st.page === 0 ? 'トップへ' : '戻る';
+  $('#next').textContent = st.page === PAGES.length - 1 ? '結果を見る' : '次へ';
+  updateNav();
+}
+function updateNav() {
+  const pg = PAGES[st.page];
+  const left = pg.items.filter(it => !isAnswered(it)).length;
+  $('#next').disabled = left > 0;
+  $('#remain').textContent = left > 0 ? `このページの未回答：${left}問` : 'このページはすべて回答済みです';
+  const c = answeredCount();
+  $('#prog').style.width = `${c / TOTAL * 100}%`;
+  $('#prog-num').textContent = `${c} / ${TOTAL}`;
+}
+
+$('#qlist').addEventListener('change', e => {
+  const inp = e.target;
+  if (inp.type === 'checkbox') {
+    const boxes = [...document.querySelectorAll('.picks input')];
+    if (boxes.filter(b => b.checked).length > 3) { inp.checked = false; $('#remain').textContent = '選べるのは3つまでです'; return; }
+    st.ans.pick = boxes.filter(b => b.checked).map(b => b.value);
+  } else {
+    st.ans[inp.name] = Number(inp.value);
+    const fs = inp.closest('fieldset'); fs.classList.add('answered');
+    // 答えた設問より下にある次の未回答の設問を、固定ヘッダーのすぐ下に来るようにスクロールする
+    const all = [...document.querySelectorAll('#qlist fieldset')];
+    const nextFs = all.slice(all.indexOf(fs) + 1).find(f => !f.classList.contains('answered') && f.dataset.id !== 'pick');
+    if (nextFs) {
+      const headBottom = $('.quiz-head').getBoundingClientRect().bottom;
+      const {top, bottom} = nextFs.getBoundingClientRect();
+      // 次の設問がヘッダーの下にまるごと見えているなら動かさない
+      if (top < headBottom || bottom > window.innerHeight) {
+        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({top: Math.max(0, top + window.scrollY - headBottom - 8), behavior: smooth ? 'smooth' : 'auto'});
+      }
+    }
+  }
+  save(); updateNav();
+});
+
+$('#next').addEventListener('click', () => {
+  if (st.page < PAGES.length - 1) { st.page++; save(); renderPage(); window.scrollTo(0, 0); }
+  else { st.done = true; st.sample = false; save(); renderReport(); show('report'); if (st.consent) sendResult(); }
+});
+$('#back').addEventListener('click', () => {
+  if (st.page === 0) { show('intro'); refreshIntro(); return; }
+  st.page--; save(); renderPage(); window.scrollTo(0, 0);
+});
+
+/* ====================== イントロ ====================== */
+function refreshIntro() {
+  $('#name').value = st.name || '';
+  $('#consent').checked = !!st.consent;
+  for (const [k, m] of Object.entries(MODES)) $('#mode-n-' + k).textContent = `${m.items.length}問`;
+  const radio = document.querySelector(`input[name="mode"][value="${st.mode}"]`); if (radio) radio.checked = true;
+  updateMeta();
+  const c = answeredCount();
+  $('#resume').hidden = !(c > 0 && !st.sample);
+  $('#resume').textContent = st.done && !st.sample ? '前回の結果を見る' : `続きから再開（${MODES[st.mode].short}・${c}/${TOTAL}）`;
+}
+const selectedMode = () => (document.querySelector('input[name="mode"]:checked') || {}).value || 'lk';
+function updateMeta() {
+  const n = MODES[selectedMode()].items.length;
+  $('#meta-q').textContent = `全${n}問・所要時間 約${Math.round(n / 8)}分`;
+}
+document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', updateMeta));
+$('#name').addEventListener('input', e => { st.name = e.target.value; save(); });
+$('#consent').addEventListener('change', e => { st.consent = e.target.checked; save(); });
+$('#start').addEventListener('click', () => {
+  if (answeredCount() > 0 && !confirm('保存されている回答を消して、最初から診断をはじめますか？')) return;
+  setMode(selectedMode());
+  st.ans = {}; st.page = 0; st.done = false; st.sample = false; st.name = $('#name').value; save();
+  renderPage(); show('quiz');
+});
+$('#resume').addEventListener('click', () => {
+  if (st.done && !st.sample) { renderReport(); show('report'); return; }
+  renderPage(); show('quiz');
+});
+$('#sample').addEventListener('click', () => { renderReport(sampleAnswers(), 'サンプル 花子', true); show('report'); });
+
+/* ====================== 採点 ====================== */
+// 1問の点数。5段階は回答点そのまま、場面選択は選んだ選択肢に割り当てた点（未回答は0）
+const ptOf = (ans, q) => {
+  const v = ans[q.id];
+  if (v === undefined || v === null) return 0;
+  if (q.type === 'ch') { const o = q.o[v]; return o && typeof o[1] === 'number' ? o[1] : 0; }
+  return v;
+};
+function compute(ans, mode = 'lk') {
+  const items = MODES[mode].items;
+  const axes = AXES.map(ax => {
+    const qs = items.filter(q => q.ax === ax.k);
+    let s = 0; for (const q of qs) { const v = ptOf(ans, q); s += q.type === 'ch' || q.p === 'a' ? v : -v; }
+    const max = qs.length * 2, pct = s / max;
+    const idx = pct >= .45 ? 0 : pct >= .12 ? 1 : pct > -.12 ? 2 : pct > -.45 ? 3 : 4;
+    const letter = s > 0 ? ax.a : ax.b;
+    return {ax, s, pct, idx, letter, edge: idx === 2, aPct: Math.round(50 + pct * 50)};
+  });
+  const core = axes.slice(0, 4).map(a => a.letter).join('');
+  const at = axes[4].letter;
+  const picked = ans.pick || [];
+  // 場面選択：各項目は6回登場し、選ばれるごとに2点、選択問題で選ばれると＋1（素点0〜13）。表示点は素点＋1（上限10）
+  // 15問の選択が10項目に分かれるため、5段階方式と同じ換算だと全体に低く出る。素点9（6回中4回＋選択問題）で満点にそろえる
+  const chosen = {};
+  if (mode === 'sj') for (const q of items) if (q.mot && q.o[ans[q.id]]) { const k = q.o[ans[q.id]][1]; chosen[k] = (chosen[k] || 0) + 1; }
+  const mot = RES.map((r, i) => {
+    const pk = picked.includes(r.k);
+    let raw, score;
+    if (mode === 'sj') {
+      raw = (chosen[r.k] || 0) * 2 + (pk ? 1 : 0);
+      score = 1 + raw;
+    } else {
+      raw = 0; for (let j = 1; j <= 3; j++) raw += (ans[`m_${r.k}${j}`] ?? 0) + 3;
+      if (pk) raw += 2;
+      raw = Math.min(raw, 15);
+      score = Math.round(1 + (raw - 3) / 12 * 9);
+    }
+    return {r, i, raw, picked: pk, score: Math.max(1, Math.min(10, score))};
+  });
+  const ranked = [...mot].sort((a, b) => b.raw - a.raw || (b.picked - a.picked) || a.i - b.i);
+  const vals = {};
+  for (const v of VALS) {
+    let s = 0; for (const q of items) if (q.val === v.k) s += ptOf(ans, q);
+    const B = Math.max(1, Math.min(9, 5 + s)); vals[v.k] = {v, A: 10 - B, B};
+  }
+  return {mode, axes, core, at, code: `${core}-${at}`, type: TYPES[core], mot, top3: ranked.slice(0, 3), low2: ranked.slice(-2).reverse(), vals};
+}
+
+/* ====================== 文章生成 ====================== */
+function valComment(x) {
+  const {v, B} = x;
+  if (B === 5) return `あなたは「${v.A[0]}」と「${v.B[0]}」、どちらの気持ちもバランスよく持っています。状況に応じて両方の視点を使い分けられるでしょう。`;
+  const side = B > 5 ? v.B : v.A, deg = Math.abs(B - 5) >= 2 ? '強い' : 'やや強い';
+  const other = B > 5 ? v.A : v.B;
+  return `あなたは「${other[0]}」という気持ちよりも、「${side[0]}」という気持ちが${deg}タイプです。${side[1]}${side[2]}`;
+}
+function styleComment(x1, x2, joinTpl) {
+  const ph = x => x.B > 5 ? x.v.pb : x.B < 5 ? x.v.pa : x.v.p0;
+  const opp = [x1, x2].filter(x => Math.abs(x.B - 5) >= 2).map(x => x.B > 5 ? x.v.ob : x.v.oa);
+  let t = joinTpl(ph(x1), ph(x2));
+  t += opp.length ? `一方で、時には${opp.map(o => o + 'こと').join('や')}も意識すると、仕事の幅がさらに広がるでしょう。`
+                  : '状況に応じてスタイルを使い分けられる柔軟さは、あなたの強みです。';
+  return t;
+}
+
+/* ====================== 図版 ====================== */
+function radarSVG(mot, topKeys) {
+  const W = 440, H = 420, cx = 220, cy = 208, R = 132, n = mot.length;
+  const pt = (i, r) => { const a = -Math.PI / 2 + i * 2 * Math.PI / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+  let g = '';
+  for (let lv = 2; lv <= 10; lv += 2) {
+    g += `<polygon points="${mot.map((_, i) => pt(i, R * lv / 10).join(',')).join(' ')}" fill="none" stroke="var(--line)" stroke-width="1"/>`;
+  }
+  mot.forEach((_, i) => { const [x, y] = pt(i, R); g += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`; });
+  const poly = mot.map((m, i) => pt(i, R * m.score / 10).join(',')).join(' ');
+  g += `<polygon points="${poly}" fill="var(--navy)" fill-opacity=".16" stroke="var(--navy)" stroke-width="2"/>`;
+  mot.forEach((m, i) => { const [x, y] = pt(i, R * m.score / 10); g += `<circle cx="${x}" cy="${y}" r="3.5" fill="var(--navy)"/>`; });
+  mot.forEach((m, i) => {
+    const [x, y] = pt(i, R + 36), top = topKeys.includes(m.r.k);
+    const col = top ? 'var(--red)' : 'var(--ink)';
+    g += `<text x="${x}" y="${y - 4}" text-anchor="middle" font-size="22" font-family="var(--ff-num)" font-weight="700" fill="${col}">${m.score}</text>`;
+    g += `<text x="${x}" y="${y + 15}" text-anchor="middle" font-size="13" font-weight="${top ? 900 : 500}" fill="${col}">${m.r.l}</text>`;
+  });
+  g += `<text x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="11" fill="var(--muted)">10点満点</text>`;
+  return `<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="モチベーション・リソース10項目のレーダーチャート">${g}</svg>`;
+}
+function donutSVG(A, B) {
+  const r = 38, c = 2 * Math.PI * r, aLen = c * A / 10;
+  return `<svg width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--gold)" stroke-width="18"/>
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--navy)" stroke-width="18" stroke-dasharray="${aLen} ${c - aLen}" transform="rotate(-90 60 60)"/>
+    <text x="60" y="66" text-anchor="middle" font-size="22" font-weight="700" font-family="var(--ff-num)" fill="var(--ink)">${A}:${B}</text></svg>`;
+}
+function splitHTML(x) {
+  const {v, A, B} = x;
+  return `<div class="split"><div class="lbls"><span class="${A > B ? 'on' : ''}">${v.an}</span><span class="${B > A ? 'on' : ''}">${v.bn}</span></div>
+    <div class="sb" aria-label="${v.an} ${A}点、${v.bn} ${B}点">${Array.from({length:10}, (_, i) => `<i class="${i < A ? 'a' : 'b'}"></i>`).join('')}</div>
+    <div class="nums num"><span>${A}</span><span>${B}</span></div></div>`;
+}
+
+/* ====================== レポート描画 ====================== */
+let lastText = '', viewingSample = false;
+function renderReport(ansOverride, nameOverride, isSample) {
+  const ans = ansOverride || st.ans;
+  const name = nameOverride || st.name || '（氏名未入力）';
+  viewingSample = !!isSample;
+  const who = (nameOverride || st.name) ? `${esc(name)}さん` : 'あなた';
+  const R = compute(ans, isSample ? 'lk' : st.mode), T = R.type;
+  const modeLabel = `${MODES[R.mode].label}（${MODES[R.mode].short}）`;
+  const d = new Date(), date = `${d.getFullYear()}年${String(d.getMonth()+1).padStart(2,'0')}月${String(d.getDate()).padStart(2,'0')}日`;
+  const topKeys = R.top3.map(m => m.r.k);
+
+  const scales = R.axes.map(a => {
+    const labs = ['かなり','やや','←→','やや','かなり'];
+    return `<div class="scale">
+      <div class="ttl"><span>${a.ax.title}</span><span><span class="num">${a.aPct}</span> : <span class="num">${100 - a.aPct}</span></span></div>
+      <div class="pole ${a.idx < 2 ? 'on' : ''}"><span class="nm"><span class="num">${a.ax.a}</span>${a.ax.an}</span><small>${a.ax.al}</small><ul>${a.ax.ab.map(b => `<li>${b}</li>`).join('')}</ul></div>
+      <div class="track" aria-label="${a.ax.an}と${a.ax.bn}の5段階で、${a.idx === 2 ? '中間' : labs[a.idx] + (a.idx < 2 ? a.ax.an : a.ax.bn)}">
+        ${labs.map(l => `<span class="lab">${l}</span>`).join('')}
+        ${labs.map((_, i) => `<span class="cell ${i === a.idx ? 'on' : ''}"></span>`).join('')}
+      </div>
+      <div class="pole r ${a.idx > 2 ? 'on' : ''}"><span class="nm"><span class="num">${a.ax.b}</span>${a.ax.bn}</span><small>${a.ax.bl}</small><ul>${a.ax.bb.map(b => `<li>${b}</li>`).join('')}</ul></div>
+    </div>`;
+  }).join('');
+
+  const letters = R.axes.map(a => `<li class="${a.edge ? 'edge' : ''}"><b>${a.letter}</b>${a.letter === a.ax.a ? a.ax.an : a.ax.bn}${a.edge ? '（境界）' : ''}</li>`).join('');
+  const edges = R.axes.filter(a => a.edge);
+  const edgeNote = edges.length ? `<p class="note">点線の指標は中間に近い結果です。${edges.map(a => `${a.ax.an}/${a.ax.bn}`).join('、')}は場面によってどちらの傾向も出やすいと考えてください。</p>` : '';
+
+  const top3 = R.top3.map((m, i) => `<div class="rcard">
+      <div class="rk"><span class="num">${i + 1}</span><small>${m.r.v}</small><b>${m.r.l}</b></div>
+      <div class="bd"><span class="tags">${m.r.tags.map(t => '・' + t).join('　')}　｜　<span class="num">${m.score}</span>点</span>
+        <p>${m.r.d}</p><div class="tip"><span>${m.r.g}</span><span>${m.r.t}</span></div></div></div>`).join('');
+
+  const downs = [...R.top3.map(m => m.r.dn), DISLIKE_TYPE[R.core[3]], DISLIKE_TYPE[R.core[2]]];
+  const V = R.vals;
+  const taskC = styleComment(V.proc, V.risk, (p, r) => `あなたは${p}、${r}ほうです。`);
+  const teamC = styleComment(V.collab, V.div, (c, dv) => `あなたは${c}仕事を進め、${dv}環境に働きやすさを感じるようです。`);
+
+  const mgr = [...R.top3.map(m => m.r.mg), ...T.m];
+  const oneOnOne = R.top3.map(m => m.r.o);
+
+  $('#sheet').innerHTML = `
+  <div class="sheet-head">
+    <div><div class="eyebrow">WORK STYLE &amp; MOTIVATION PROFILE</div><h1>あなたの仕事タイプ・モチベーション プロフィール</h1>${isSample ? '<span class="sample-badge">サンプル結果（例）</span>' : ''}</div>
+    <dl><dt>氏名</dt><dd>${esc(name)}</dd><dt>実施日</dt><dd class="num">${date}</dd><dt>回答方式</dt><dd>${modeLabel}</dd><dt>タイプ</dt><dd class="num">${R.code}</dd></dl>
+  </div>
+
+  <div class="band"><span class="no">1</span><div class="tx"><h2>自分の特徴を理解する</h2><p>仕事や職場での行動にあらわれやすい性格タイプです</p></div></div>
+  <div class="sec">
+    <div class="type-hero">
+      <div class="code">${R.core}<span>-${R.at}</span></div>
+      <div><p class="tname">${T.n}</p><p class="catch">${T.c}</p><ul class="letters">${letters}</ul></div>
+    </div>
+    ${edgeNote}
+    <div class="cols3">
+      <div><h3>基本的な特徴</h3><p>${T.s}</p></div>
+      <div><h3>仕事面の特徴</h3><p>${T.w}</p></div>
+      <div><h3>困難な場面であらわれやすい特徴と啓発ポイント</h3><p>${T.d}</p><p>${AT_NOTE[R.at]}</p></div>
+    </div>
+    <div class="sub-h">5つの指標</div>
+    <div class="scales">${scales}</div>
+    <p class="note">両端に近いほど、その特徴が顕著であることを表します。各指標に良し悪しはなく、どちらの傾向が望ましいということはありません。</p>
+  </div>
+
+  <div class="band"><span class="no">2</span><div class="tx"><h2>自分の特徴を生かす</h2><p>強みと注意点を知り、力を発揮しやすい役割を考えましょう</p></div></div>
+  <div class="sec">
+    <div class="boxes">
+      <div class="box"><h3>強み</h3><ul>${T.st.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="box"><h3>注意したい点</h3><ul>${T.ca.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="box"><h3>力を発揮しやすい役割・業務</h3><div class="chips">${T.r.map(x => `<span>${x}</span>`).join('')}</div></div>
+      <div class="box tone"><h3>一緒に働く人へ（取扱説明書）</h3><ul>${T.m.map(x => `<li>${x}</li>`).join('')}</ul></div>
+    </div>
+  </div>
+
+  <div class="band"><span class="no">3</span><div class="tx"><h2>あなたのモチベーション・リソース</h2><p>働くうえで大事にしているポイント。やりがいの源を知って、モチベーションアップのヒントにしましょう</p></div></div>
+  <div class="sec">
+    <div class="mot">
+      <div>${radarSVG(R.mot, topKeys)}<p class="note" style="text-align:center">得点は1〜10点。赤字はトップ3です。</p></div>
+      <div class="top3"><div class="sub-h">モチベーション・リソース（トップ3）</div>${top3}</div>
+    </div>
+    <div class="boxes">
+      <div class="box"><h3>やる気が下がりやすい状況</h3><ul>${downs.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="box"><h3>あまり重視していないこと</h3><p style="font-size:14px">「${R.low2.map(m => m.r.l).join('」「')}」はあなたのやる気にはあまり影響しないようです。この観点で動機づけをしても響きにくいため、上位の項目を軸にすると効果的です。</p></div>
+    </div>
+  </div>
+
+  <div class="band"><span class="no">4</span><div class="tx"><h2>あなたにとって仕事とは／成長とは</h2><p>得点は合わせて10になるように配分しています</p></div></div>
+  <div class="sec">
+    <div class="vals">
+      ${['purpose','growth'].map(k => { const x = V[k]; return `<div class="vcard"><h3>${x.v.title}</h3><p class="q">${x.v.q}</p>
+        <div class="donut-row">${donutSVG(x.A, x.B)}<div class="lg"><span><i style="background:var(--navy)"></i>${x.v.an} <b class="num">${x.A}</b></span><span><i style="background:var(--gold)"></i>${x.v.bn} <b class="num">${x.B}</b></span></div></div>
+        <p>${valComment(x)}</p></div>`; }).join('')}
+    </div>
+    <div class="sub-h">仕事のすすめ方のスタイル</div>
+    <div class="vals">
+      <div class="vcard"><h3>課題遂行</h3>${splitHTML(V.proc)}${splitHTML(V.risk)}<p>${taskC}</p></div>
+      <div class="vcard"><h3>協働</h3>${splitHTML(V.collab)}${splitHTML(V.div)}<p>${teamC}</p></div>
+    </div>
+  </div>
+
+  <div class="band"><span class="no">5</span><div class="tx"><h2>やる気を引き出す関わり方</h2><p>上司・チームメンバー向け。仕事タイプとモチベーションを掛け合わせたヒントです</p></div></div>
+  <div class="sec">
+    <p>${T.n}（${R.code}）の${who}は、「${R.top3.map(m => m.r.l).join('」「')}」がやる気の源泉です。次のような関わり方で力を引き出しやすくなります。</p>
+    <div class="boxes">
+      <div class="box tone"><h3>効果的な関わり方</h3><ul>${mgr.map(x => `<li>${x}</li>`).join('')}</ul></div>
+      <div class="box"><h3>1on1で話すと良いテーマ</h3><ul>${oneOnOne.map(x => `<li>${x}</li>`).join('')}<li>${T.r[0]}など、力を発揮しやすい役割への関心</li></ul></div>
+    </div>
+  </div>
+  <div class="foot-note">本診断はMBTIの4つの心理的指向の考え方を参考にした独自の簡易診断であり、公式のMBTI®検査ではありません。結果は回答時点の自己認識を表すもので、人事評価や配置の決定に単独で用いることは避けてください。</div>`;
+
+  lastText = [
+    `【MBTI仕事タイプ診断】${name}（${date}・${modeLabel}）`,
+    `タイプ：${R.code} ${T.n} ― ${T.c}`,
+    `指標：` + R.axes.map(a => `${a.ax.an}${a.aPct}/${a.ax.bn}${100 - a.aPct}`).join('、'),
+    `強み：${T.st.join('、')}`,
+    `注意点：${T.ca.join('、')}`,
+    `モチベーション上位：` + R.top3.map((m, i) => `${i + 1}.${m.r.l}(${m.score})`).join(' '),
+    `働く目的：${V.purpose.v.an}${V.purpose.A}:${V.purpose.v.bn}${V.purpose.B}／成長観：${V.growth.v.an}${V.growth.A}:${V.growth.v.bn}${V.growth.B}`,
+    `効果的な関わり方：${mgr.join('／')}`,
+  ].join('\n');
+  $('#toast').textContent = '';
+  $('#copy-area').innerHTML = '';
+  lastResult = isSample ? null : R;
+  renderSendBox();
+}
+
+/* ====================== サンプル回答 ====================== */
+function sampleAnswers() {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const target = {EI:'a', SN:'b', TF:'b', JP:'a', AT:'b'};
+  const a = {};
+  for (const q of partA) { const lean = q.p === target[q.ax] ? 1 : -1; a[q.id] = Math.max(-2, Math.min(2, lean * (rnd() < .6 ? 2 : 1) + (rnd() < .2 ? -lean : 0))); }
+  const bias = {shonin:2, shinwa:2, toritsu:1, chosen:1, sozo:0, senmon:0, koken:1, antei:-1, hoshu:-1, jiritsu:0};
+  for (const q of partB) a[q.id] = Math.max(-2, Math.min(2, bias[q.res] + (rnd() < .5 ? 0 : rnd() < .5 ? 1 : -1)));
+  a.pick = ['shinwa','shonin','koken'];
+  const vb = {purpose:-1, growth:-2, proc:-1, risk:0, collab:-1, div:1};
+  for (const q of partC) a[q.id] = Math.max(-2, Math.min(2, vb[q.val] + (rnd() < .5 ? 0 : -1)));
+  return a;
+}
+
+/* ====================== レポート操作 ====================== */
+$('#copy').addEventListener('click', () => {
+  const ok = () => { $('#toast').textContent = 'コピーしました。ChatworkやSlackに貼り付けて共有できます。'; };
+  const fallback = () => {
+    $('#copy-area').innerHTML = `<textarea class="copy-fallback" id="copy-fb" readonly></textarea>`;
+    const ta = $('#copy-fb'); ta.value = lastText; ta.focus(); ta.select();
+    $('#toast').textContent = 'コピーできなかったため、下の欄を選択しました。Ctrl+C（⌘+C）でコピーしてください。';
+  };
+  try { navigator.clipboard.writeText(lastText).then(ok, fallback); } catch (e) { fallback(); }
+});
+$('#edit').addEventListener('click', () => { if (viewingSample || answeredCount() === 0) { show('intro'); refreshIntro(); return; } st.page = 0; renderPage(); show('quiz'); });
+$('#print').addEventListener('click', () => window.print());
+$('#restart').addEventListener('click', () => { if (!viewingSample && answeredCount() > 0 && !confirm('回答を消して最初からやり直しますか？')) return; st = {name: st.name, ans:{}, page:0, done:false, sample:false, consent: st.consent, sentAt: st.sentAt, mode: st.mode, rid: st.rid}; save(); refreshIntro(); show('intro'); });
+
+/* ====================== 結果の送信と管理者一覧 ======================
+   送り先は2通り。どちらも1人1件で、受け直すと上書きされる。
+   - claude.ai 上（Artifact）：results/<閲覧者ID> に保存。読めるのは管理者（オーナー・編集者）だけ。一覧画面あり
+   - 単体公開版（GitHub Pages など）：SHEET_URL の Google Apps Script に送り、スプレッドシートに1行ずつ記録 */
+const SHEET_URL = '';  // build.py が公開版のビルド時に書き換える
+let DB = null, UID = null, IS_OWNER = false, lastResult = null, sending = false, backend = null;
+let admRows = [], admUnsub = null;
+const fmtDate = iso => { const d = new Date(iso); return isNaN(d) ? '' : `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`; };
+
+function summaryDoc(R) {
+  return {v: 1, mode: R.mode, name: (st.name || '').trim().slice(0, 60), at: new Date().toISOString(), code: R.code,
+    axes: Object.fromEntries(R.axes.map(a => [a.ax.k, a.aPct])),
+    mot: Object.fromEntries(R.mot.map(m => [m.r.k, m.score])),
+    top3: R.top3.map(m => m.r.k),
+    vals: Object.fromEntries(Object.entries(R.vals).map(([k, x]) => [k, x.B]))};
+}
+// スプレッドシート用：氏名以外は記号・数値だけにして、表に並べやすい形で送る
+function sheetRow(body) {
+  return {rid: st.rid, name: body.name, mode: body.mode, code: body.code,
+    typeName: (TYPES[String(body.code).slice(0, 4)] || {}).n || '',
+    axes: body.axes, mot: body.mot, top3: body.top3.map(k => (RES.find(r => r.k === k) || {}).l || ''), vals: body.vals};
+}
+function newRid() {
+  try { if (crypto.randomUUID) return crypto.randomUUID(); } catch (e) {}
+  return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+}
+const sheetPost = payload => fetch(SHEET_URL, {method: 'POST', mode: 'no-cors', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(payload)});
+const BACKENDS = {
+  claude: {
+    put: async body => {
+      const ref = DB.doc('results/' + UID);
+      try { await ref.set(body); }
+      catch (e) { if (e && e.code === 'unavailable') { await new Promise(r => setTimeout(r, 800 + Math.random() * 800)); await ref.set(body); } else throw e; }
+    },
+    remove: () => DB.doc('results/' + UID).delete(),
+  },
+  // no-cors のため応答は読めない。通信が届いた時点で送信済みとみなす
+  sheet: {
+    put: body => { if (!st.rid) { st.rid = newRid(); save(); } return sheetPost(Object.assign({action: 'upsert'}, sheetRow(body))); },
+    remove: () => st.rid ? sheetPost({action: 'delete', rid: st.rid}) : Promise.resolve(),
+  },
+};
+
+function renderSendBox() {
+  const box = $('#send-box');
+  box.hidden = !backend || !lastResult;
+  if (box.hidden) return;
+  $('#send-msg').textContent = st.sentAt
+    ? `この結果の要約は ${fmtDate(st.sentAt)} に管理者へ送信済みです。受け直した場合は最新の結果に置き換わります。`
+    : '結果の要約（氏名・タイプ・指標の比率・モチベーション得点・仕事観の配分）を管理者に送れます。各設問への回答そのものは送りません。';
+  $('#send').textContent = st.sentAt ? 'もう一度送る（最新の結果で上書き）' : '結果を管理者に送る';
+  $('#send').disabled = sending;
+  $('#unsend').hidden = !st.sentAt;
+}
+async function sendResult() {
+  if (!backend || !lastResult || sending) return;
+  sending = true; renderSendBox();
+  const body = summaryDoc(lastResult);
+  try {
+    await backend.put(body);
+    st.sentAt = body.at; st.consent = true; save();
+    $('#toast').textContent = '管理者に結果を送りました。';
+  } catch (e) {
+    $('#toast').textContent = e && e.code === 'invalid_argument'
+      ? 'このページでは結果を送れません（閲覧のみの共有になっています）。結果をテキストでコピーして共有してください。'
+      : '送信できませんでした。時間をおいてもう一度お試しください。';
+  }
+  sending = false; renderSendBox();
+}
+async function unsendResult() {
+  if (!backend || !confirm('管理者に送った結果を取り消しますか？')) return;
+  try { await backend.remove(); st.sentAt = null; st.consent = false; save(); $('#toast').textContent = '送信を取り消しました。'; }
+  catch (e) { $('#toast').textContent = '取り消せませんでした。時間をおいてもう一度お試しください。'; }
+  renderSendBox();
+}
+$('#send').addEventListener('click', sendResult);
+$('#unsend').addEventListener('click', unsendResult);
+
+function renderAdmin() {
+  const rows = [...admRows].sort((a, b) => String(b.at).localeCompare(String(a.at)));
+  $('#adm-count').textContent = `${rows.length}人`;
+  const types = {};
+  for (const r of rows) { const c = String(r.code || '').slice(0, 4); if (TYPES[c]) types[c] = (types[c] || 0) + 1; }
+  $('#adm-types').innerHTML = Object.entries(types).sort((a, b) => b[1] - a[1])
+    .map(([c, n]) => `<span><b class="num">${c}</b> ${esc(TYPES[c].n)}　${n}人</span>`).join('') || '<span>まだ結果がありません</span>';
+  const cnt = RES.map(r => ({r, n: rows.filter(x => Array.isArray(x.top3) && x.top3.includes(r.k)).length})).sort((a, b) => b.n - a.n);
+  const max = Math.max(1, ...cnt.map(c => c.n));
+  $('#adm-mot').innerHTML = cnt.map(c => `<div><span>${c.r.l}</span><i style="width:${c.n / max * 100}%"></i><span class="num">${c.n}</span></div>`).join('');
+  const resL = k => (RES.find(r => r.k === k) || {}).l || '';
+  const ab = B => typeof B === 'number' ? `${10 - B}:${B}` : '';
+  $('#adm-rows').innerHTML = rows.map(r => `<tr><td>${esc(r.name || '（氏名なし）')}</td><td class="num">${fmtDate(r.at)}<br><small style="font-family:var(--ff-body);font-size:11px;color:var(--muted)">${esc((MODES[r.mode] || MODES.lk).short)}</small></td>
+    <td class="code">${esc(r.code || '')}<br><small style="font-family:var(--ff-body);font-size:11px;color:var(--muted);font-weight:500">${esc((TYPES[String(r.code || '').slice(0, 4)] || {}).n || '')}</small></td>
+    <td>${(r.top3 || []).map(k => `${esc(resL(k))}(${esc((r.mot || {})[k] ?? '')})`).join('、')}</td>
+    <td class="num">${ab((r.vals || {}).purpose)}</td><td class="num">${ab((r.vals || {}).growth)}</td>
+    <td>${IS_OWNER ? `<button class="del" type="button" data-id="${esc(r.id)}">削除</button>` : ''}</td></tr>`).join('');
+}
+function openAdmin() {
+  show('admin'); renderAdmin();
+  if (admUnsub) return;
+  $('#adm-status').textContent = '読み込み中…';
+  admUnsub = DB.collection('results').onSnapshot(snap => {
+    admRows = snap.docs.map(d => Object.assign({}, d.data(), {id: d.id}));
+    $('#adm-status').textContent = '';
+    renderAdmin();
+  }, () => { admUnsub = null; $('#adm-status').textContent = '一覧を読み込めませんでした。ページを開き直してください。'; });
+}
+$('#admin-open').addEventListener('click', openAdmin);
+$('#adm-back').addEventListener('click', () => { show('intro'); refreshIntro(); });
+$('#adm-rows').addEventListener('click', async e => {
+  const b = e.target.closest('.del'); if (!b) return;
+  const row = admRows.find(r => r.id === b.dataset.id);
+  if (!confirm(`${row && row.name ? row.name + 'さん' : 'この人'}の結果を削除しますか？`)) return;
+  try { await DB.doc('results/' + b.dataset.id).delete(); } catch (err) { $('#adm-toast').textContent = '削除できませんでした。'; }
+});
+$('#adm-copy').addEventListener('click', () => {
+  const head = ['氏名','実施日','回答方式','タイプ','タイプ名', ...AXES.map(a => `${a.an}%`), ...RES.map(r => r.l), '上位1','上位2','上位3', ...VALS.map(v => `${v.title}(${v.bn})`)];
+  const lines = [head, ...[...admRows].sort((a, b) => String(b.at).localeCompare(String(a.at))).map(r => [
+    r.name || '', fmtDate(r.at), (MODES[r.mode] || MODES.lk).short, r.code || '', (TYPES[String(r.code || '').slice(0, 4)] || {}).n || '',
+    ...AXES.map(a => (r.axes || {})[a.k] ?? ''), ...RES.map(x => (r.mot || {})[x.k] ?? ''),
+    ...[0, 1, 2].map(i => (RES.find(x => x.k === (r.top3 || [])[i]) || {}).l || ''),
+    ...VALS.map(v => (r.vals || {})[v.k] ?? '')])].map(c => c.map(x => String(x).replace(/[\t\n]/g, ' ')).join('\t')).join('\n');
+  navigator.clipboard.writeText(lines).then(() => { $('#adm-toast').textContent = 'コピーしました。Excelやスプレッドシートに貼り付けてください。'; },
+    () => { $('#adm-toast').textContent = 'コピーできませんでした。'; });
+});
+
+async function initCloud() {
+  const rt = window.claude;
+  if (!rt || typeof rt.use !== 'function') {
+    // 単体公開版：SHEET_URL が設定されていればスプレッドシートに送る。一覧はスプレッドシートで見る
+    if (/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(SHEET_URL)) {
+      backend = BACKENDS.sheet;
+      $('#consent-row').hidden = false;
+      renderSendBox();
+    }
+    return;
+  }
+  const [db, user] = await Promise.all([rt.use('db'), rt.use('user')]);
+  if (!db || !user) return;
+  const id = await user.id();
+  if (!id) return;
+  const canWrite = await user.can('data.write');
+  IS_OWNER = await user.isOwner();
+  const admin = IS_OWNER || await user.canEdit();
+  DB = db; UID = id; backend = BACKENDS.claude;
+  $('#consent-row').hidden = canWrite === false && !admin;
+  $('#admin-open').hidden = !admin;
+  renderSendBox();
+  if (st.done && st.consent && !st.sentAt && lastResult) sendResult();
+}
+
+/* ====================== 起動 ====================== */
+refreshIntro();
+initCloud();
+})();
+</script>
+
+<script>
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+}
+</script>
+</body>
+</html>
